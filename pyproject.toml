@@ -6,6 +6,7 @@ readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
     "dotenv>=0.9.9",
+    "mysql-connector-python>=9.3.0",
     "requests>=2.32.3",
     "scrapeops-scrapy-proxy-sdk>=1.0",
     "scrapy>=2.13.1",
