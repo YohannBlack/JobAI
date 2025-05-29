@@ -1,6 +1,7 @@
 # Environnement virtuel Python
 venv/
 
+<<<<<<< HEAD
 # Dossiers Node.js
 front-cv/node_modules/
 
@@ -17,3 +18,8 @@ backend-cv/train_ner/cv_data_final.json
 backend-cv/train_ner/cv_data_fixed.json
 backend-cv/train_ner/cv_train_data copy.json
 backend-cv/train_ner/cv_train_data.json
+=======
+# Virtual environments
+.venv
+output.json
+>>>>>>> f32c19e (gitignore+depencies)
