@@ -14,6 +14,7 @@ services:
       - DB_USER=${DB_USER}
       - DB_PASSWORD=${DB_PASSWORD}
     volumes:
+      - ./job_scraper:/app
       - env_data:/app
     networks:
       - scraper_network
@@ -39,9 +40,10 @@ services:
       test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
       timeout: 5s
       retries: 10
-      
+
   frontend:
-    build : ./frontend
+    build : 
+      context: ./frontend
     depends_on:
       - scraper
     environment:

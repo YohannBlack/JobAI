@@ -6,7 +6,7 @@ import streamlit as st
 from dotenv import load_dotenv
 from mysql.connector import Error
 
-load_dotenv()
+load_dotenv('/env/.env')
 
 st.set_page_config(page_title="Live Jobs Table", layout="wide")
 
