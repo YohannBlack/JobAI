@@ -2,18 +2,21 @@ version: '3.8'
 
 services:
   scraper:
-    build: /job_scraper
+    build: ./job_scraper
     depends_on:
-      - db
+      db:
+        condition: service_healthy
     environment:
       - SCRAPEOPS_API_KEY=${SCRAPEOPS_API_KEY}
-      - DB_HOST=${DB_HOST}
+      - DB_HOST=db
       - DB_PORT=${DB_PORT}
       - DB_NAME=${DB_NAME}
       - DB_USER=${DB_USER}
       - DB_PASSWORD=${DB_PASSWORD}
     volumes:
-      - .:/app
+      - env_data:/app
+    networks:
+      - scraper_network
 
   db:
     image: mysql:latest
@@ -28,6 +31,36 @@ services:
       - "${DB_PORT}:3306"
     volumes:
       - mysql_data:/var/lib/mysql
+      - env_data:/app
+    networks:
+      - scraper_network
+      - frontend_network
+    healthcheck:
+      test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
+      timeout: 5s
+      retries: 10
+      
+  frontend:
+    build : ./frontend
+    depends_on:
+      - scraper
+    environment:
+      - DB_HOST=db
+      - DB_PORT=${DB_PORT}
+      - DB_NAME=${DB_NAME}
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+    ports:
+      - "8501:8501"
+    volumes:
+      - env_data:/app
+    networks:
+      - frontend_network
 
 volumes:
   mysql_data:
+  env_data:
+
+networks:
+  scraper_network:
+  frontend_network:

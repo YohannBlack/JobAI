@@ -1,16 +1,13 @@
-FROM PYTHON:3.12-slim
+FROM python:3.12-slim
 
-# Set the working directory
 WORKDIR /app
 
-# Copy the requirements file into the container
-COPY requirements.txt .
+RUN pip install --upgrade pip && \
+    pip install scrapy
 
-# Install the required packages
+COPY . /app
+
 RUN pip install --no-cache-dir -r requirements.txt
-
-# Copy the rest of the application code into the container
-COPY . .
 
 CMD ["scrapy", "crawl", "linkedin_scraper"]
 

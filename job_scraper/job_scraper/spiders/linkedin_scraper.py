@@ -1,9 +1,11 @@
+import time
 from urllib.parse import parse_qs, urlencode, urlparse, urlunparse
 
 import scrapy
 from job_scraper.items import LinkedInJobItem
 from job_scraper.itemsloaders import LinkedInJobItemLoader
 
+time.sleep(5)
 
 def update_start_param(url, new_start):
     parsed_url = urlparse(url)
