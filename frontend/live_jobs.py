@@ -5,17 +5,11 @@ import pandas as pd
 import streamlit as st
 from dotenv import load_dotenv
 from mysql.connector import Error
+import os
 
 load_dotenv()
 
 st.set_page_config(page_title="Live Jobs Table", layout="wide")
-
-# --- DB connection config ---
-DB_USER = st.secrets["DB_USER"]
-DB_PASS = st.secrets["DB_PASSWORD"]
-DB_HOST = st.secrets["DB_HOST"]
-DB_PORT = st.secrets["DB_PORT"]
-DB_NAME = st.secrets["DB_NAME"]
 
 REFRESH_INTERVAL = 2  # seconds
 
@@ -27,11 +21,11 @@ placeholder = st.empty()
 def get_jobs_data():
     try:
         connection = mysql.connector.connect(
-            host=DB_HOST,
-            port=DB_PORT,
-            user=DB_USER,
-            password=DB_PASS,
-            database=DB_NAME,
+            host=os.environ.get("DB_HOST"),
+            user=os.environ.get("DB_USER"),
+            password=os.environ.get("DB_PASSWORD"),
+            database=os.environ.get("DB_NAME"),
+            port=os.environ.get("DB_PORT", 3306)
         )
         if connection.is_connected():
             query = "SELECT * FROM jobs"
