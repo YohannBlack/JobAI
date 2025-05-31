@@ -9,6 +9,8 @@ COPY . /app
 
 RUN pip install --no-cache-dir -r requirements.txt
 
-CMD ["scrapy", "crawl", "linkedin_scraper"]
+# Aentrypoint pour charger l'env et lancer Scrapy
+COPY entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
 
-
+CMD ["/entrypoint.sh"]
