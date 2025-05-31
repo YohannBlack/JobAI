@@ -11,11 +11,11 @@ load_dotenv()
 st.set_page_config(page_title="Live Jobs Table", layout="wide")
 
 # --- DB connection config ---
-DB_USER = st.secrets.get("DB_USER")
-DB_PASS = st.secrets.get("DB_PASS")
-DB_HOST = st.secrets.get("DB_HOST")
-DB_PORT = st.secrets.get("DB_PORT")
-DB_NAME = st.secrets.get("DB_NAME")
+DB_USER = st.secrets["DB_USER"]
+DB_PASS = st.secrets["DB_PASSWORD"]
+DB_HOST = st.secrets["DB_HOST"]
+DB_PORT = st.secrets["DB_PORT"]
+DB_NAME = st.secrets["DB_NAME"]
 
 REFRESH_INTERVAL = 2  # seconds
 

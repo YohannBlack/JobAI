@@ -10,4 +10,5 @@ wheels/
 .venv
 output.json
 .env
+frontend/.streamlit/secrets.toml
 *.lock
