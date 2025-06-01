@@ -13,3 +13,4 @@ output.json
 *.lock
 data/
 .DS_Store
+.logs
