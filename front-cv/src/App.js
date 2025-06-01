@@ -3,6 +3,10 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Login from './Login';
 import Upload from './Upload';
+import Swipe from "./Swipe";
+
+console.log("Swipe = ", Swipe);
+
 
 function App() {
   return (
@@ -10,6 +14,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Login />} />
         <Route path="/upload" element={<Upload />} />
+        <Route path="/swipe" element={<Swipe />} />
       </Routes>
     </Router>
   );
