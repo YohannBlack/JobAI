@@ -1,11 +1,19 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom"; 
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 function Upload() {
   const [selectedFile, setSelectedFile] = useState(null);
   const [cvData, setCvData] = useState(null);
+  const [user, setUser] = useState({ prenom: '', nom: '', email: '' });
 
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const savedUser = localStorage.getItem('user');
+    if (savedUser) {
+      setUser(JSON.parse(savedUser));
+    }
+  }, []);
 
   const handleFileChange = (event) => {
     setSelectedFile(event.target.files[0]);
@@ -41,71 +49,136 @@ function Upload() {
   };
 
   const handleGoSwipe = () => {
-    navigate("/swipe"); // <-- redirection vers la page Swipe
+    navigate("/swipe");
   };
 
-  // Styles
-  const containerStyle = {
-    fontFamily: "Arial, sans-serif",
-    maxWidth: "600px",
-    margin: "40px auto",
-    padding: "20px",
-    border: "1px solid #ccc",
-    borderRadius: "8px",
-    boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
-    backgroundColor: "#f9f9f9",
-  };
-
-  const headingStyle = {
-    textAlign: "center",
-    color: "#333",
-  };
-
-  const inputStyle = {
-    display: "block",
-    margin: "20px auto",
-  };
-
-  const buttonStyle = {
-    display: "block",
-    margin: "10px auto",
-    padding: "10px 20px",
-    backgroundColor: "#4CAF50",
-    color: "white",
-    border: "none",
-    borderRadius: "4px",
-    cursor: "pointer",
-  };
-
-  const resultStyle = {
-    marginTop: "30px",
-    backgroundColor: "#fff",
-    padding: "15px",
-    borderRadius: "6px",
-    border: "1px solid #ddd",
+  const styles = {
+    container: {
+      background: 'linear-gradient(135deg, #1f1c2c, #928dab)',
+      minHeight: '100vh',
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+      padding: '20px',
+    },
+    card: {
+      backgroundColor: '#ffffff',
+      padding: '40px 30px',
+      borderRadius: '16px',
+      boxShadow: '0 10px 30px rgba(0, 0, 0, 0.1)',
+      width: '100%',
+      maxWidth: '500px',
+      textAlign: 'center',
+    },
+    logo: {
+      width: '140px',
+      marginBottom: '20px',
+      display: 'block',
+      marginLeft: 'auto',
+      marginRight: 'auto',
+      filter: 'drop-shadow(0 0 6px rgba(0, 0, 0, 0.25))',
+      backgroundColor: '#fff',
+      padding: '6px',
+      borderRadius: '12px',
+    },
+    title: {
+      fontSize: '22px',
+      marginBottom: '8px',
+      color: '#333',
+      fontWeight: '600',
+    },
+    subtitle: {
+      fontSize: '14px',
+      color: '#777',
+      marginBottom: '24px',
+    },
+    input: {
+      marginBottom: '16px',
+      display: 'block',
+      marginLeft: 'auto',
+      marginRight: 'auto',
+    },
+    fileInput: {
+      padding: '10px',
+      borderRadius: '8px',
+      border: '1px solid #ccc',
+      fontSize: '15px',
+      width: '100%',
+      maxWidth: '320px',
+      marginBottom: '16px',
+    },
+    button: {
+      backgroundColor: '#e63946',
+      color: '#fff',
+      border: 'none',
+      padding: '12px',
+      borderRadius: '8px',
+      fontSize: '16px',
+      cursor: 'pointer',
+      fontWeight: 'bold',
+      width: '100%',
+      maxWidth: '320px',
+      marginBottom: '20px',
+    },
+    result: {
+      backgroundColor: '#f5f5f5',
+      padding: '20px',
+      borderRadius: '10px',
+      textAlign: 'left',
+      marginTop: '30px',
+      boxShadow: '0 4px 10px rgba(0,0,0,0.05)',
+    },
+    resultTitle: {
+      marginBottom: '10px',
+      fontWeight: 'bold',
+      fontSize: '18px',
+    },
+    resultItem: {
+      marginBottom: '6px',
+    },
+    swipeButton: {
+      backgroundColor: '#2196F3',
+      color: '#fff',
+      border: 'none',
+      padding: '12px',
+      borderRadius: '8px',
+      fontSize: '16px',
+      cursor: 'pointer',
+      fontWeight: 'bold',
+      width: '100%',
+      maxWidth: '320px',
+      marginTop: '20px',
+    }
   };
 
   return (
-    <div style={containerStyle}>
-      <h1 style={headingStyle}>Bienvenue Dihia BELARBIA</h1>
-      <p style={{ textAlign: "center" }}>Téléverse ton CV ici (PDF uniquement)</p>
-      <input type="file" accept=".pdf" onChange={handleFileChange} style={inputStyle} />
-      <button onClick={handleUpload} style={buttonStyle}>Uploader mon CV</button>
+    <div style={styles.container}>
+      <div style={styles.card}>
+        <img src="/logo.png" alt="Logo JobAI" style={styles.logo} />
+        <h1 style={styles.title}>Bienvenue {user.prenom} {user.nom}</h1>
+        <p style={styles.subtitle}>Téléverse ton CV ici (PDF uniquement)</p>
+        <input
+          type="file"
+          accept=".pdf"
+          onChange={handleFileChange}
+          style={styles.fileInput}
+        />
+        <button onClick={handleUpload} style={styles.button}>Uploader mon CV</button>
 
-      {cvData && (
-        <div style={resultStyle}>
-          <h2>Informations extraites :</h2>
-          <p><strong>Nom :</strong> {cvData.nom}</p>
-          <p><strong>Email :</strong> {cvData.email}</p>
-          <p><strong>Téléphone :</strong> {cvData.telephone}</p>
-          <p><strong>Compétences :</strong> {cvData.competences}</p>
-          <p><strong>Adresse :</strong> {cvData.adresse}</p>
-
-          <button onClick={handleGoSwipe} style={{ ...buttonStyle, backgroundColor: "#2196F3" }}>
-            Go Swipe
-          </button>
-        </div>
-      )}
+        {cvData && (
+          <div style={styles.result}>
+            <div style={styles.resultTitle}>📄 Informations extraites :</div>
+            <div style={styles.resultItem}><strong>Nom :</strong> {cvData.nom}</div>
+            <div style={styles.resultItem}><strong>Email :</strong> {cvData.email}</div>
+            <div style={styles.resultItem}><strong>Téléphone :</strong> {cvData.telephone}</div>
+            <div style={styles.resultItem}><strong>Compétences :</strong> {cvData.competences}</div>
+            <div style={styles.resultItem}><strong>Adresse :</strong> {cvData.adresse}</div>
+            <button onClick={handleGoSwipe} style={styles.swipeButton}>
+              Go Swipe →
+            </button>
+          </div>
+        )}
+      </div>
     </div>
   );
 }

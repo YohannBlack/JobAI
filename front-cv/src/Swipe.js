@@ -85,6 +85,16 @@ function Swipe() {
 
   return (
     <div style={containerStyle}>
+        <img
+  src="/logo.png"
+  alt="Logo JobAI"
+  style={{
+    width: "150px",
+    display: "block",
+    margin: "0 auto 20px",
+    filter: "drop-shadow(0 0 5px rgba(0,0,0,0.2))"
+  }}
+/>
       <h1 style={{ marginBottom: "30px" }}>Swipe les Offres</h1>
       <div style={cardStyle}>
         <h2 style={titleStyle}>{offre.intitule}</h2>
