@@ -2,18 +2,18 @@ import logging
 import os
 import re
 
-from src.resume_parser.resume_ner import ResumeNER
-from src.resume_parser.text_extraction import (
+from resume_parser.resume_ner import ResumeNER
+from resume_parser.text_extraction import (
     extract_text_from_image,
     extract_text_from_pdf,
     extract_years_of_experience,
 )
-from src.tools.logger import AppLogger
+from tools.logger import AppLogger
 
 logger = AppLogger(
     name="ResumeParser",
     level=logging.DEBUG,
-    log_file="parser.log",
+    log_file=".logs/resume_parser.log",
     console_level=logging.INFO,
     file_level=logging.DEBUG,
 )

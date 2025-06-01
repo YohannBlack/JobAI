@@ -3,13 +3,13 @@ from collections import defaultdict
 
 from transformers import pipeline
 
-from src.tools.logger import AppLogger
+from tools.logger import AppLogger
 
 logger = AppLogger(
-    name="ResumeParser",
+    name="ResumeNER",
     level=logging.DEBUG,
-    log_file="parser.log",
-    console_level=logging.INFO, 
+    log_file=".logs/resume_ner.log",
+    console_level=logging.INFO,
     file_level=logging.DEBUG,
 )
 
@@ -17,7 +17,9 @@ logger = AppLogger(
 class ResumeNER:
     def __init__(self, model_name="omarahmed11/resume-ner-model"):
         try:
-            self.nlp_ner = pipeline("ner", model_name=model_name, aggregation_strategy="simple")
+            self.nlp_ner = pipeline(
+                "ner", model=model_name, aggregation_strategy="simple"
+            )
             logger.info(f"Loaded NER model: {model_name}")
         except Exception as e:
             logger.error(f"Failed to load NER model {model_name}: {e}")
@@ -32,6 +34,7 @@ class ResumeNER:
             return {}
 
         try:
+            logger.info("Starting entity extraction.")
             ner_result = self.nlp_ner(text)
         except Exception as e:
             logger.error(f"Error during entity extraction: {e}")
@@ -39,13 +42,13 @@ class ResumeNER:
 
         entities = defaultdict(list)
         for entity in ner_result:
+            logger.debug(f"Extracted entity: {entity}")
             entities[entity['entity_group']].append({entity['word']})
 
         processed_entities = {}
         for key, value_list in entities.items():
-            processed_entities[key] = list(
-                set([val.strip() for val in value_list if val.strip()])
-            )
+            logger.debug(f"Processing entity group: {key} with values: {value_list}")
+            processed_entities[key] = list([val for val in value_list])
         return processed_entities
 
 

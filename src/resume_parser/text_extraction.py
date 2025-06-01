@@ -4,12 +4,12 @@ import pdfplumber  # Changed from fitz
 import pytesseract
 from PIL import Image
 
-from src.tools.logger import AppLogger
+from tools.logger import AppLogger
 
 logger = AppLogger(
     name="TextExtractor",
     level="DEBUG",
-    log_file="parser.log",
+    log_file=".logs/text_extractor.log",
     console_level="INFO",
     file_level="DEBUG",
 )
