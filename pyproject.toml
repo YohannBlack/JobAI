@@ -9,10 +9,13 @@ dependencies = [
     "mysql-connector-python>=9.3.0",
     "pdf2image>=1.17.0",
     "pdfminer>=20191125",
+    "pdfplumber>=0.11.6",
     "pytesseract>=0.3.13",
     "requests>=2.32.3",
     "scrapeops-scrapy-proxy-sdk>=1.0",
     "scrapy>=2.13.1",
     "scrapy-user-agents>=0.1.1",
     "spacy>=3.8.7",
+    "torch>=2.7.0",
+    "transformers>=4.52.4",
 ]
