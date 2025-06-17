@@ -2,10 +2,12 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 function Login() {
+  const [isRegistering, setIsRegistering] = useState(false); // true = formulaire d'inscription
   const [formData, setFormData] = useState({
     prenom: '',
     nom: '',
     email: '',
+    password: '',
   });
 
   const navigate = useNavigate();
@@ -18,39 +20,101 @@ function Login() {
     }));
   };
 
-  const handleLogin = (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-    if (formData.prenom && formData.nom && formData.email) {
-      localStorage.setItem('user', JSON.stringify(formData));
-      navigate('/upload');
-    } else {
-      alert('Merci de remplir tous les champs.');
-    }
-  };
+    const { prenom, nom, email, password } = formData;
+
+   if (isRegistering) {
+  if (prenom && nom && email && password) {
+
+    fetch("http://localhost:5000/register", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(formData),
+    })
+      .then(res => res.json())
+      .then(data => {
+        if (data.message) {
+          alert(data.message);
+          navigate('/upload');
+        } else {
+          alert(data.error);
+        }
+      });
+  } else {
+    alert('Merci de remplir tous les champs pour créer un compte.');
+  }
+} 
+else {
+    if (email && password) {
+  fetch("http://localhost:5000/login", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email, password }),
+  })
+    .then(res => res.json())
+    .then(data => {
+      if (data.user) {
+        localStorage.setItem('user', JSON.stringify(data.user));
+        alert(data.message);
+        navigate('/upload');
+      } else {
+        alert(data.error);
+      }
+    });
+} else {
+  alert('Merci de remplir tous les champs pour vous connecter.');
+}
+
+  }
+
+};
 
   return (
     <div style={styles.container}>
       <div style={styles.card}>
         <img src="/logo.png" alt="Logo JobAI" style={styles.logo} />
         <h1 style={styles.title}>Bienvenue sur JobAI</h1>
-        <p style={styles.subtitle}>Connecte-toi pour continuer</p>
-        <form onSubmit={handleLogin} style={styles.form}>
-          <input
-            type="text"
-            name="prenom"
-            placeholder="Prénom"
-            value={formData.prenom}
-            onChange={handleChange}
-            style={styles.input}
-          />
-          <input
-            type="text"
-            name="nom"
-            placeholder="Nom"
-            value={formData.nom}
-            onChange={handleChange}
-            style={styles.input}
-          />
+        <p style={styles.subtitle}>
+          {isRegistering ? 'Créer un compte' : 'Connecte-toi pour continuer'}
+        </p>
+
+        <div style={{ marginBottom: '16px' }}>
+          <button
+            style={{ ...styles.toggleButton, backgroundColor: isRegistering ? '#ccc' : '#e63946' }}
+            onClick={() => setIsRegistering(false)}
+          >
+            Se connecter
+          </button>
+          <button
+            style={{ ...styles.toggleButton, backgroundColor: isRegistering ? '#e63946' : '#ccc' }}
+            onClick={() => setIsRegistering(true)}
+          >
+            Créer un compte
+          </button>
+        </div>
+
+        <form onSubmit={handleSubmit} style={styles.form}>
+          {isRegistering && (
+            <>
+              <input
+                type="text"
+                name="prenom"
+                placeholder="Prénom"
+                value={formData.prenom}
+                onChange={handleChange}
+                style={styles.input}
+              />
+              <input
+                type="text"
+                name="nom"
+                placeholder="Nom"
+                value={formData.nom}
+                onChange={handleChange}
+                style={styles.input}
+              />
+            </>
+          )}
           <input
             type="email"
             name="email"
@@ -59,7 +123,17 @@ function Login() {
             onChange={handleChange}
             style={styles.input}
           />
-          <button type="submit" style={styles.button}>Se connecter</button>
+          <input
+            type="password"
+            name="password"
+            placeholder="Mot de passe"
+            value={formData.password}
+            onChange={handleChange}
+            style={styles.input}
+          />
+          <button type="submit" style={styles.button}>
+            {isRegistering ? 'Créer le compte' : 'Se connecter'}
+          </button>
         </form>
       </div>
     </div>
@@ -129,6 +203,15 @@ const styles = {
     cursor: 'pointer',
     fontWeight: 'bold',
     transition: 'background-color 0.3s',
+  },
+   toggleButton: {
+    padding: '10px 12px',
+    margin: '0 6px',
+    border: 'none',
+    borderRadius: '6px',
+    color: '#fff',
+    fontWeight: 'bold',
+    cursor: 'pointer',
   },
 };
 
