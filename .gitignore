@@ -1,16 +1,19 @@
-# Python-generated files
-__pycache__/
-*.py[oc]
-build/
-dist/
-wheels/
-*.egg-info
+# Environnement virtuel Python
+venv/
 
-# Virtual environments
-.venv
-output.json
-.env
-*.lock
-data/
-.DS_Store
-.logs
+# Dossiers Node.js
+front-cv/node_modules/
+
+# Fichiers Python compilés
+backend-cv/__pycache__/
+**/__pycache__/
+
+# Fichiers sensibles
+backend-cv/.env
+backend-cv/france_travail_api/.env
+
+# Données d'entraînement à ne pas versionner
+backend-cv/train_ner/cv_data_final.json
+backend-cv/train_ner/cv_data_fixed.json
+backend-cv/train_ner/cv_train_data copy.json
+backend-cv/train_ner/cv_train_data.json

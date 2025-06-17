@@ -2,18 +2,19 @@ import requests
 import os
 import csv
 from dotenv import load_dotenv
-import csv
 from get_token import get_access_token
 
 
 
+
 #Recuperer le token
-token = get_access_token()
+
 
 
 import requests
 
-def search_jobs(token, range_="0-9", sort="1", mots_cles=None):
+def search_jobs(range_="0-9", sort="1", mots_cles=None):
+    token = get_access_token()
     url = "https://api.francetravail.io/partenaire/offresdemploi/v2/offres/search"
     headers = {
         "Authorization": f"Bearer {token}",
@@ -31,7 +32,7 @@ def search_jobs(token, range_="0-9", sort="1", mots_cles=None):
     response.raise_for_status()
     return response.json()
 
-result = search_jobs(token, range_="0-50", mots_cles="Data")
+result = search_jobs(range_="0-50", mots_cles="pharmaceutiques")
 #print(result)
 
 

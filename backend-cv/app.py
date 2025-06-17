@@ -8,6 +8,48 @@ from typing import Dict
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from functools import lru_cache
 import pandas as pd
+import spacy
+import hashlib
+import requests
+import os
+import csv
+from dotenv import load_dotenv
+from france_travail_api.get_token import get_access_token
+from transformers import AutoTokenizer, AutoModelForTokenClassification
+from transformers import pipeline
+import requests
+
+
+import os
+from dotenv import load_dotenv
+import pyodbc
+
+load_dotenv() 
+import pyodbc
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
+
+"""
+def get_connection():
+    connection_string = (
+        f"DRIVER={{{os.getenv('SQL_DRIVER')}}};"
+        f"SERVER={os.getenv('SQL_SERVER')};"
+        f"DATABASE={os.getenv('SQL_DATABASE')};"
+        f"UID={os.getenv('SQL_USERNAME')};"
+        f"PWD={os.getenv('SQL_PASSWORD')};"
+        f"Encrypt=yes;TrustServerCertificate=no;Connection Timeout=30;"
+    )
+    return pyodbc.connect(connection_string)
+"""
+# Modèle CamemBERT NER (français)
+model_name = "Jean-Baptiste/camembert-ner"
+tokenizer = AutoTokenizer.from_pretrained(model_name)
+model = AutoModelForTokenClassification.from_pretrained(model_name)
+
+nlp = pipeline("ner", model=model, tokenizer=tokenizer, aggregation_strategy="simple")
+
 
 # === Initialisation ===
 app = Flask(__name__)
@@ -170,14 +212,96 @@ def extract():
 
 @app.route("/offres", methods=["GET"])
 def get_offres():
-    df = pd.read_csv("./france_travail api/offres.csv")
+    df = pd.read_csv("france_travail_api/offres.csv")
     colonnes_voulues = ["intitule", "description", "dateCreation",  "typeContrat", "lieuTravail_libelle","origineOffre_urlOrigine"]
 
     # Garde uniquement ces colonnes (vérifie qu'elles existent)
     df_filtre = df[colonnes_voulues]
     return df_filtre.to_json(orient="records", force_ascii=False)
 
+"""
+# Initialisation de la base (à faire une seule fois)
+def init_db():
+    conn = get_connection()
+    cursor = conn.cursor()
+    cursor.execute('''
+        IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='users' AND xtype='U')
+        CREATE TABLE users (
+            id INT IDENTITY(1,1) PRIMARY KEY,
+            prenom NVARCHAR(100),
+            nom NVARCHAR(100),
+            email NVARCHAR(255) UNIQUE,
+            password NVARCHAR(255)
+        )
+    ''')
+    conn.commit()
+    conn.close()
 
-# === Lancement local ===
+init_db()
+
+def hash_password(password):
+    import hashlib
+    return hashlib.sha256(password.encode()).hexdigest()
+
+@app.route('/register', methods=['POST'])
+def register():
+    data = request.json
+    prenom = data.get('prenom')
+    nom = data.get('nom')
+    email = data.get('email')
+    password = hash_password(data.get('password'))
+
+    try:
+        conn = get_connection()
+        cursor = conn.cursor()
+        cursor.execute("INSERT INTO users (prenom, nom, email, password) VALUES (?, ?, ?, ?)",
+                       (prenom, nom, email, password))
+        conn.commit()
+        return jsonify({"message": "Compte créé avec succès"}), 201
+    except pyodbc.IntegrityError:
+        return jsonify({"error": "Email déjà utilisé"}), 400
+    finally:
+        conn.close()
+
+#connexion
+@app.route('/login', methods=['POST'])
+def login():
+    data = request.json
+    email = data.get('email')
+    password = hash_password(data.get('password'))
+
+    try:
+        conn = get_connection()
+        cursor = conn.cursor()
+        # Requête paramétrée pour éviter injections SQL
+        cursor.execute("SELECT prenom, nom FROM users WHERE email = ? AND password = ?", (email, password))
+        user = cursor.fetchone()
+    except Exception as e:
+        return jsonify({"error": f"Erreur base de données : {str(e)}"}), 500
+    finally:
+        conn.close()
+
+    if user:
+        return jsonify({
+            "message": "Connexion réussie",
+            "user": {
+                "prenom": user[0],
+                "nom": user[1],
+                "email": email
+            }
+        })
+    else:
+        return jsonify({"error": "Email ou mot de passe invalide"}), 401
+"""
+@app.route('/register', methods=['POST'])
+def register():
+    return jsonify({"error": "Email ou mot de passe invalide"}), 401
+
+#connexion
+@app.route('/login', methods=['POST'])
+def login():
+    
+    return jsonify({"error": "Email ou mot de passe invalide"}), 401
+
 if __name__ == '__main__':
     app.run(debug=True, port=5000)
