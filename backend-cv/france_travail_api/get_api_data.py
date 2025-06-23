@@ -32,7 +32,7 @@ def search_jobs(range_="0-9", sort="1", mots_cles=None):
     response.raise_for_status()
     return response.json()
 
-result = search_jobs(range_="0-50", mots_cles="pharmaceutiques")
+result = search_jobs(range_="0-50", mots_cles="data")
 #print(result)
 
 

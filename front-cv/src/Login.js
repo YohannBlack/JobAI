@@ -8,6 +8,7 @@ function Login() {
     nom: '',
     email: '',
     password: '',
+    role: 'user',
   });
 
   const navigate = useNavigate();
