@@ -109,6 +109,9 @@ function Swipe() {
         >
           GOOO
         </a>
+        <p style={{ fontWeight: "bold", color: "#555" }}>
+    Score de correspondance : {(offre.score * 100).toFixed(1)}%
+    </p>
       </div>
       <div>
         <button

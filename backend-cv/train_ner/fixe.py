@@ -1,30 +1,51 @@
 import json
+import spacy
+from spacy.training import offsets_to_biluo_tags
+from tqdm import tqdm
 
-def remove_overlapping_entities(entities):
-    # Trie les entités par début
-    entities = sorted(entities, key=lambda x: x[0])
-    result = []
-    last_end = -1
-    for start, end, label in entities:
-        if start >= last_end:
-            result.append([start, end, label])
-            last_end = end
-        else:
-            print(f"⚠️ Entité ignorée car chevauchement détecté : {[start, end, label]}")
-    return result
+# Charge ton modèle spaCy (langue française ici)
+nlp = spacy.blank("fr")
 
-with open("cv_data_fixed.json", "r", encoding="utf-8") as f:
-    data = json.load(f)
+def is_entity_aligned(text, entities):
+    """Vérifie si toutes les entités sont bien alignées avec les tokens du texte"""
+    doc = nlp.make_doc(text)
+    try:
+        tags = offsets_to_biluo_tags(doc, entities)
+        return "-" not in tags
+    except:
+        return False
 
-new_data = []
-for sample in data:
-    new_entities = remove_overlapping_entities(sample["entities"])
-    new_data.append({
-        "text": sample["text"],
-        "entities": new_entities
-    })
+def clean_dataset(input_json_path, output_json_path):
+    with open(input_json_path, "r", encoding="utf-8") as f:
+        data = json.load(f)
 
-with open("cv_data_final.json", "w", encoding="utf-8") as f:
-    json.dump(new_data, f, ensure_ascii=False, indent=2)
+    cleaned_data = []
+    for entry in tqdm(data, desc="Nettoyage"):
+        text = entry["text"]
+        entities = entry.get("entities", [])
 
-print("✅ Fichier corrigé sauvegardé dans cv_data_final.json")
+        # On vérifie les entités une par une
+        valid_entities = []
+        for start, end, label in entities:
+            try:
+                substring = text[start:end]
+                doc = nlp.make_doc(text)
+                biluo = offsets_to_biluo_tags(doc, [[start, end, label]])
+                if "-" not in biluo:
+                    valid_entities.append([start, end, label])
+            except:
+                continue
+
+        # Ajoute l'entrée uniquement si elle a des entités valides
+        if valid_entities:
+            cleaned_data.append({
+                "text": text,
+                "entities": valid_entities
+            })
+
+    with open(output_json_path, "w", encoding="utf-8") as f:
+        json.dump(cleaned_data, f, indent=2, ensure_ascii=False)
+
+    print(f"✅ Dataset nettoyé enregistré dans : {output_json_path}")
+
+clean_dataset("cv_train_data.json", "cleaned_dataset.json")
