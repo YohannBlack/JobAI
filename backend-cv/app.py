@@ -1,37 +1,34 @@
-from flask import Flask, request, jsonify
-from flask_cors import CORS
+# === Standard Libraries ===
+import os
 import re
 import io
-import time
+import uuid
 import logging
+import hashlib
+from datetime import datetime
 from typing import Dict
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from functools import lru_cache
+
+# === Third-party Libraries ===
 import pandas as pd
-import spacy
-import hashlib
-import requests
-import os
-import csv
-from dotenv import load_dotenv
-from france_travail_api.get_token import get_access_token
-from transformers import AutoTokenizer, AutoModelForTokenClassification
-from transformers import pipeline
-import requests
-
-
-import os
-from dotenv import load_dotenv
 import pyodbc
-
-load_dotenv() 
-import pyodbc
+from flask import Flask, request, jsonify
+from flask_cors import CORS
 from dotenv import load_dotenv
-import os
+from azure.storage.blob import BlobServiceClient
 
+# === Internal Modules ===
+from france_travail_api.get_token import get_access_token  # (si inutilisé, tu peux aussi le supprimer)
+
+# === Load environment variables ===
 load_dotenv()
 
-"""
+AZURE_CONNECTION_STRING = os.getenv("AZURE_STORAGE_CONNECTION_STRING")
+AZURE_CONTAINER_NAME = os.getenv("AZURE_CONTAINER_NAME")
+blob_service_client = BlobServiceClient.from_connection_string(AZURE_CONNECTION_STRING)
+container_client = blob_service_client.get_container_client(AZURE_CONTAINER_NAME)
+
 def get_connection():
     connection_string = (
         f"DRIVER={{{os.getenv('SQL_DRIVER')}}};"
@@ -42,26 +39,17 @@ def get_connection():
         f"Encrypt=yes;TrustServerCertificate=no;Connection Timeout=30;"
     )
     return pyodbc.connect(connection_string)
-"""
-# Modèle CamemBERT NER (français)
-model_name = "Jean-Baptiste/camembert-ner"
-tokenizer = AutoTokenizer.from_pretrained(model_name)
-model = AutoModelForTokenClassification.from_pretrained(model_name)
 
-nlp = pipeline("ner", model=model, tokenizer=tokenizer, aggregation_strategy="simple")
-
-
-# === Initialisation ===
+# === Initialisation Flask ===
 app = Flask(__name__)
 CORS(app)
-
-# === Logging ===
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
+# === Traitement PDF (OCR uniquement) ===
 WHITESPACE_PATTERN = re.compile(r'\s+')
 PUNCTUATION_PATTERN = re.compile(r'\s*([.,;:!?])\s*')
-# === Classe PDFProcessor ===
+
 class PDFProcessor:
     def __init__(self):
         self._pdf_reader = None
@@ -85,15 +73,6 @@ class PDFProcessor:
                 self._ocr_available = False
         return self._ocr_available
 
-    def extract_text_pypdf(self, pdf_content: bytes) -> str:
-        try:
-            file_obj = io.BytesIO(pdf_content)
-            reader = self.pdf_reader(file_obj)
-            return ' '.join([page.extract_text() or '' for page in reader.pages])
-        except Exception as e:
-            logger.warning(f"Erreur PyPDF2: {e}")
-            return ""
-
     def extract_text_ocr(self, pdf_content: bytes) -> str:
         if not self.ocr_available:
             return ""
@@ -111,7 +90,6 @@ class PDFProcessor:
     def extract_text(self, file) -> str:
         file.seek(0)
         pdf_content = file.read()
-        # Forcer l’OCR
         return self.clean_text(self.extract_text_ocr(pdf_content))
 
     @staticmethod
@@ -121,76 +99,17 @@ class PDFProcessor:
         text = PUNCTUATION_PATTERN.sub(r'\1 ', text)
         return text.strip()
 
-# === Classe InfoExtractor ===
-class InfoExtractor:
-    @staticmethod
-    def extract_email(text):
-        # Ne nettoie que les espaces parasites après le point
-        text_cleaned = re.sub(r"(\.\s+)([a-zA-Z])", r".\2", text)
-        match = re.search(r"[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+", text_cleaned)
-        return match.group() if match else "Non trouvée"
-
-
-    @staticmethod
-    def extract_phone(text):
-        match = re.search(r"\+?\d{1,3}[-.\s]?\d{2,3}[-.\s]?\d{2,3}[-.\s]?\d{2,3}[-.\s]?\d{2,3}", text)
-        return match.group() if match else "Non trouvé"
-
-    @staticmethod
-    
-    def extract_name(text):
-        # Souvent le premier mot en majuscules (2 mots max) est le nom
-        match = re.match(r"^([A-ZÉÈÀÇÙ][A-ZÉÈÀÇÙ]+(?:\s+[A-ZÉÈÀÇÙ][A-ZÉÈÀÇÙ]+)?)", text)
-        return match.group(1) if match else "Non trouvé"
-
-    @staticmethod
-    def extract_address(text):
-        match = re.search(r"\d{1,4}\s+[A-Za-z\s]+(?:St|Street|Avenue|Av|Boulevard|Blvd|Road|Rd|Rue|Chemin|Allée|Impasse),?\s+[A-Za-z\s]+", text)
-        return match.group() if match else "Non trouvée"
-
-
-    @staticmethod
-    def extract_skills(text):
-        if "COMPÉTENCES" in text:
-            skills_section = text.split("COMPÉTENCES", 1)[1]
-            # On coupe au mot suivant courant
-            end_keywords = ["EXPÉRIENCES", "FORMATION", "RÉALISATIONS"]
-            for key in end_keywords:
-                if key in skills_section:
-                    skills_section = skills_section.split(key)[0]
-            return skills_section.strip()
-        return "Non détectées"
-
-
-# === Instances ===
 pdf_processor = PDFProcessor()
-info_extractor = InfoExtractor()
 
-# === Fonction principale ===
+# === Traitement PDF route ===
 def process_pdf(file) -> Dict[str, str]:
     text = pdf_processor.extract_text(file)
     if not text.strip():
         raise ValueError("Aucun texte détecté")
-    tasks = {
-    'nom': lambda: info_extractor.extract_name(text),
-    'email': lambda: info_extractor.extract_email(text),
-    'telephone': lambda: info_extractor.extract_phone(text),
-    'adresse': lambda: info_extractor.extract_address(text),
-    'competences': lambda: info_extractor.extract_skills(text)
-    }
-    results = {}
-    with ThreadPoolExecutor(max_workers=3) as executor:
-        futures = {executor.submit(func): key for key, func in tasks.items()}
-        for future in as_completed(futures):
-            key = futures[future]
-            try:
-                results[key] = future.result()
-            except Exception as e:
-                logger.error(f"Erreur extraction {key}: {e}")
-                results[key] = "Erreur"
-    return results
+    return {"texte_brut": text[:1000]}  # exemple simple, renvoie les 1000 premiers caractères
 
-# === Route Flask ===
+# === API ROUTES ===
+
 @app.route('/extract', methods=['POST'])
 def extract():
     if 'file' not in request.files:
@@ -199,28 +118,34 @@ def extract():
     if not file or file.filename == '':
         return jsonify({'error': 'Aucun fichier sélectionné'}), 400
 
-    print(f"Fichier reçu : {file.filename}") 
     try:
-        start = time.time()
+        timestamp = datetime.utcnow().strftime('%Y%m%d%H%M%S')
+        unique_id = uuid.uuid4().hex
+        extension = os.path.splitext(file.filename)[1]
+        blob_filename = f"{timestamp}_{unique_id}{extension}"
+
+        file.seek(0)
+        container_client.upload_blob(name=blob_filename, data=file, overwrite=True)
+
+        file.seek(0)
         result = process_pdf(file)
-        logger.info(f"Extraction terminée en {time.time() - start:.2f}s")
-        return jsonify(result)
+
+        return jsonify({
+            "blob_filename": blob_filename,
+            "extraction": result
+        })
+
     except Exception as e:
         logger.error(f"Erreur globale : {e}")
         return jsonify({'error': str(e)}), 500
 
-
 @app.route("/offres", methods=["GET"])
 def get_offres():
     df = pd.read_csv("france_travail_api/offres.csv")
-    colonnes_voulues = ["intitule", "description", "dateCreation",  "typeContrat", "lieuTravail_libelle","origineOffre_urlOrigine"]
-
-    # Garde uniquement ces colonnes (vérifie qu'elles existent)
+    colonnes_voulues = ["intitule", "description", "dateCreation",  "typeContrat", "lieuTravail_libelle", "origineOffre_urlOrigine"]
     df_filtre = df[colonnes_voulues]
     return df_filtre.to_json(orient="records", force_ascii=False)
 
-"""
-# Initialisation de la base (à faire une seule fois)
 def init_db():
     conn = get_connection()
     cursor = conn.cursor()
@@ -240,7 +165,6 @@ def init_db():
 init_db()
 
 def hash_password(password):
-    import hashlib
     return hashlib.sha256(password.encode()).hexdigest()
 
 @app.route('/register', methods=['POST'])
@@ -263,7 +187,6 @@ def register():
     finally:
         conn.close()
 
-#connexion
 @app.route('/login', methods=['POST'])
 def login():
     data = request.json
@@ -273,7 +196,6 @@ def login():
     try:
         conn = get_connection()
         cursor = conn.cursor()
-        # Requête paramétrée pour éviter injections SQL
         cursor.execute("SELECT prenom, nom FROM users WHERE email = ? AND password = ?", (email, password))
         user = cursor.fetchone()
     except Exception as e:
@@ -292,16 +214,7 @@ def login():
         })
     else:
         return jsonify({"error": "Email ou mot de passe invalide"}), 401
-"""
-@app.route('/register', methods=['POST'])
-def register():
-    return jsonify({"error": "Email ou mot de passe invalide"}), 401
 
-#connexion
-@app.route('/login', methods=['POST'])
-def login():
-    
-    return jsonify({"error": "Email ou mot de passe invalide"}), 401
-
+# === Run App ===
 if __name__ == '__main__':
     app.run(debug=True, port=5000)
