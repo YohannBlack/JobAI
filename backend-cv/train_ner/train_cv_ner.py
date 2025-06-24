@@ -6,9 +6,15 @@ import json
 import random
 from pathlib import Path
 from sklearn.model_selection import train_test_split
+import matplotlib.pyplot as plt
 
+# === Variables pour suivi des courbes ===
+loss_values = []
+f1_values = []
+precision_values = []
+recall_values = []
 # === Chargement brut des données JSON ===
-with open("cv_data_final.json", "r", encoding="utf-8") as f:
+with open("ner_training_200_noisy_fixed.json", "r", encoding="utf-8") as f:
     raw_data = json.load(f)
 
 # === Prétraitement : nettoyage des entités non alignées ===
@@ -48,7 +54,7 @@ nlp.initialize()
 
 # === Entraînement ===
 best_loss = float("inf")
-output_dir = Path("cv_ner_model_V2")
+output_dir = Path("cv_ner_model_VC_LA_BOO0NNE")
 output_dir.mkdir(exist_ok=True)
 
 def evaluate_model(nlp, examples):
@@ -62,27 +68,56 @@ def evaluate_model(nlp, examples):
         eval_examples.append(example)
     return scorer.score(eval_examples)
 
-for epoch in range(35):
+for epoch in range(100):
     print(f"\n🔁 Epoch {epoch+1}")
     random.shuffle(train_data)
     losses = {}
-
+ 
     for text, ann in train_data:
         doc = nlp.make_doc(text)
         example = Example.from_dict(doc, ann)
         nlp.update([example], drop=0.2, losses=losses)
 
-    print("📉 Losses:", losses)
+    loss_val = losses.get("ner", 0)
+    loss_values.append(loss_val)
+    print("📉 Loss:", loss_val)
 
-    # Évaluation tous les 10 epochs
-    if (epoch + 1) % 10 == 0:
-        scores = evaluate_model(nlp, test_data)
-        print(f"📊 Precision: {scores['ents_p']:.2f} | Recall: {scores['ents_r']:.2f} | F1: {scores['ents_f']:.2f}")
+    # Évaluation tous les epochs
+    scores = evaluate_model(nlp, test_data)
+    precision_values.append(scores["ents_p"])
+    recall_values.append(scores["ents_r"])
+    f1_values.append(scores["ents_f"])
+
+    print(f"📊 Precision: {scores['ents_p']:.2f} | Recall: {scores['ents_r']:.2f} | F1: {scores['ents_f']:.2f}")
 
     # Sauvegarde du meilleur modèle
-    if losses.get("ner", float("inf")) < best_loss:
-        best_loss = losses["ner"]
+    if loss_val < best_loss:
+        best_loss = loss_val
         nlp.to_disk(output_dir)
         print(f"✅ Nouveau meilleur modèle sauvegardé (loss: {best_loss:.2f})")
 
-print(f"\n🎉 Entraînement terminé. Meilleur modèle sauvegardé dans {output_dir}")
+# === Tracé des courbes ===
+epochs = list(range(1, 101))
+
+plt.figure(figsize=(12, 6))
+
+plt.subplot(1, 2, 1)
+plt.plot(epochs, loss_values, label="Loss", color="red")
+plt.xlabel("Epoch")
+plt.ylabel("Loss")
+plt.title("Courbe de perte (NER)")
+plt.grid(True)
+plt.legend()
+
+plt.subplot(1, 2, 2)
+plt.plot(epochs, precision_values, label="Precision", color="blue")
+plt.plot(epochs, recall_values, label="Recall", color="orange")
+plt.plot(epochs, f1_values, label="F1 Score", color="green")
+plt.xlabel("Epoch")
+plt.ylabel("Score")
+plt.title("Scores de performance (NER)")
+plt.grid(True)
+plt.legend()
+
+plt.tight_layout()
+plt.show()

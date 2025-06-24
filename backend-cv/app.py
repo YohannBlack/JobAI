@@ -73,6 +73,7 @@ def extract():
             tmp_path = tmp.name
 
         result = extract_text_from_pdf(tmp_path) 
+        print(result)
         df_entities = extract_entities(result)
         profil = construire_profil(df_entities)
         
@@ -180,8 +181,7 @@ def login():
         user = cursor.fetchone()
     except Exception as e:
         return jsonify({"error": f"Erreur base de données : {str(e)}"}), 500
-    finally:
-        conn.close()
+
 
     if user:
         return jsonify({
@@ -200,9 +200,9 @@ def login():
 @app.route("/feedback", methods=["POST"])
 def enregistrer_feedback():
     data = request.get_json()
-    user_id = data.get("user_id", "test_user")  # par défaut
+    user_id = data.get("user_id", "test_user") 
     offre_id = data.get("offre_id")
-    feedback = data.get("feedback")  # "oui" ou "non"
+    feedback = data.get("feedback") 
 
     if not offre_id or feedback not in ["oui", "non"]:
         return jsonify({"error": "offre_id ou feedback invalide"}), 400

@@ -1,0 +1,55 @@
+{
+  "text": "1. To Initiate a Dial :\n------------------------\nParameter  : PhoneNo - Phone number to be dialed\nURL        : http://ServerIp:Port/CallFunctions.xbc?DialoutThisNumber()&PhoneNo=V ALUE\nExample    : http://192.168.11.99/CallFunctions.xbc?DialoutThisNumber()&PhoneNo=9876543210\nReturned XML : \n<?xml version=\"1.0\" encoding=\"ISO-8859-1\" ?>\n<Call> \n<CampId>1</CampId> \n<RecId>1</RecId> \n<Status>1</Status> \n<Msg>Number added successfully.</Msg> \n</Call>\nStatus :\n1 - SUCCESS\n0 - FAILED\n2. To Check Status:\n--------------------\nParameters : campid - Unique Id of the Process  |  Recid - Unique Id of the Record\nURL        : http://ServerIp:Port/CallFunctions.xbc?CheckStatus()&campid=VALUE&recid=VALUE\nExample    : http://192.168.11.99/CallFunctions.xbc?CheckStatus()&campid=1&recid=1\nReturned XML : \n<?xml version=\"1.0\" encoding=\"ISO-8859-1\" ?>\n<Call>\n<CampId>1</CampId> \n<RecId>1</RecId> \n<Status>2</Status> \n<Msg>Success</Msg> \n</Call>\nStatus:\n 2 - SUCCESS\n 1 - IN PROGRESS\n 0 – PENDING\n-1 – FAILED\n-2 - INACTIVE (Lead Inactive)\n-3 - INACTIVE (Present in DND)3.To Dispose the Call:\n ----------------------\nParameters : campid - Unique Id of the Process  |  recid - Unique Id of the Record\nURL        : http://ServerIp:Port/CallFunctions.xbc?DisposeTheCall()&campid=V ALUE&recid=V ALUE\nExample    : http://192.168.11.99/CallFunctions.xbc?DisposeTheCall()&campid=1&recid=1\nReturned XML :\n<?xml version=\"1.0\" encoding=\"ISO-8859-1\" ?> \n<Call>\n<Status>1</Status> \n<Msg>The call disposition done successfully.\n</Msg> \n</Call>\nStatus :\n1 - SUCCESS \n0 - FAILED",
+  "entities": [
+    [
+      111,
+      115,
+      "SKILL"
+    ],
+    [
+      285,
+      288,
+      "SKILL"
+    ],
+    [
+      562,
+      569,
+      "SKILL"
+    ],
+    [
+      679,
+      684,
+      "SKILL"
+    ],
+    [
+      72,
+      77,
+      "SKILL"
+    ],
+    [
+      312,
+      320,
+      "SKILL"
+    ],
+    [
+      463,
+      470,
+      "SKILL"
+    ],
+    [
+      523,
+      533,
+      "SKILL"
+    ],
+    [
+      963,
+      971,
+      "SKILL"
+    ],
+    [
+      322,
+      325,
+      "SKILL"
+    ]
+  ]
+}

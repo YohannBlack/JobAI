@@ -1,0 +1,60 @@
+{
+  "text": " \n Hello  \n I’m ​  ​ Your ​  ​ Name  \n 123 ​  ​ YOUR ​  ​ STREET  \n YOUR ​  ​ CITY, ​  ​ ST ​  ​ 12345  \n (123) ​  ​ 456-7890  \n NO_REPLY@EXAMPLE.COM  \n Skills  \n Lorem ​  ​ ipsum ​  ​ dolor ​  ​ sit ​  ​ amet, ​  ​ consectetur ​  ​ adipiscing ​  ​ elit. ​  ​ Aenean ​  ​ ac ​  ​ interdum ​  ​ nisi. ​  ​ Sed ​  ​ in ​  ​ consequat  \n mi. ​  ​ Sed ​  ​ pulvinar ​  ​ lacinia ​  ​ felis ​  ​ eu ​  ​ finibus.  \n Experience  \n MONTH ​  ​ 20XX ​  ​ - ​  ​ PRESENT  \n Company ​  ​ Name, ​  ​ Location ​ ​  ​ - ​  ​ Job ​  ​ Title  \n ● Lorem ​  ​ ipsum ​  ​ dolor ​  ​ sit ​  ​ amet, ​  ​ consectetur ​  ​ adipiscing ​  ​ elit.    \n ● Aenean ​  ​ ac ​  ​ interdum ​  ​ nisi. ​  ​ Sed ​  ​ in ​  ​ consequat ​  ​ mi.  \n ● Sed ​  ​ in ​  ​ consequat ​  ​ mi, ​  ​ sed ​  ​ pulvinar ​  ​ lacinia ​  ​ felis ​  ​ eu ​  ​ finibus.  \n MONTH ​  ​ 20XX ​  ​ - ​  ​ MONTH ​  ​ 20XX  \n Company ​  ​ Name, ​  ​ Location ​ ​  ​ - ​  ​ Job ​  ​ Title  \n ● Lorem ​  ​ ipsum ​  ​ dolor ​  ​ sit ​  ​ amet, ​  ​ consectetur ​  ​ adipiscing ​  ​ elit.    \n ● Aenean ​  ​ ac ​  ​ interdum ​  ​ nisi. ​  ​ Sed ​  ​ in ​  ​ consequat ​  ​ mi.    \n MONTH ​  ​ 20XX ​  ​ - ​  ​ MONTH ​  ​ 20XX  \n Company ​  ​ Name, ​  ​ Location ​ ​  ​ - ​  ​ Job ​  ​ Title  \n ● Lorem ​  ​ ipsum ​  ​ dolor ​  ​ sit ​  ​ amet, ​  ​ consectetur ​  ​ adipiscing ​  ​ elit.    \n ● Aenean ​  ​ ac ​  ​ interdum ​  ​ nisi. ​  ​ Sed ​  ​ in ​  ​ consequat ​  ​ mi.    \n ● Sed ​  ​ pulvinar ​  ​ lacinia ​  ​ felis ​  ​ eu ​  ​ finibus.    \n Education  \n MONTH ​  ​​  ​ 20XX ​  ​ - ​  ​ MONTH ​  ​ 20XX  \n College ​  ​ Name, ​  ​ Location ​ ​  ​ - ​  ​ Degree  \n Lorem ​  ​ ipsum ​  ​ dolor ​  ​ sit ​  ​ amet, ​  ​ consectetuer ​  ​ adipiscing ​  ​ elit, ​  ​ sed ​  ​ diam ​  ​ nonummy ​  ​ nibh ​  ​ euismod ​  ​ tincidunt  \n ut ​  ​ laoreet ​  ​ dolore.  \n Awards  \n Lorem ​  ​ ipsum ​  ​ dolor ​  ​ sit ​  ​ amet, ​  ​ consectetur ​  ​ adipiscing ​  ​ elit.  \n Aenean ​  ​ ac ​  ​ interdum ​  ​ nisi.    \n  ",
+  "annotations": [
+    [
+      153,
+      159,
+      "SKILL: skills"
+    ],
+    [
+      464,
+      471,
+      "SKILL: Company"
+    ],
+    [
+      488,
+      496,
+      "SKILL: Location"
+    ],
+    [
+      1493,
+      1502,
+      "SKILL: Education"
+    ],
+    [
+      14,
+      15,
+      "SKILL: M"
+    ],
+    [
+      1557,
+      1564,
+      "SKILL: College"
+    ],
+    [
+      305,
+      308,
+      "SKILL: SED"
+    ],
+    [
+      196,
+      199,
+      "SKILL: Sit"
+    ],
+    [
+      146,
+      149,
+      "SKILL: COM"
+    ],
+    [
+      1604,
+      1610,
+      "SKILL: Degree"
+    ],
+    [
+      1812,
+      1818,
+      "SKILL: Awards"
+    ]
+  ]
+}
