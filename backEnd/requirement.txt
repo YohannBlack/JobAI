@@ -1,0 +1,12 @@
+Flask==2.3.3
+flask-cors==4.0.0
+python-dotenv==1.0.1
+pyodbc==5.1.0
+azure-storage-blob==12.19.1
+pandas==2.2.2
+scikit-learn==1.4.2
+transformers==4.41.2
+torch==2.3.0
+sentencepiece==0.2.0
+PyMuPDF==1.23.25
+Pillow==10.3.0

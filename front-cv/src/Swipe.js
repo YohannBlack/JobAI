@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
-
 function Swipe() {
   const [offres, setOffres] = useState([]);
   const [index, setIndex] = useState(0);
 
+  const userId = localStorage.getItem("user_id");
+
   useEffect(() => {
-    fetch("http://localhost:5000/offres")
+    fetch(`http://localhost:5000/offres?user_id=${userId}`)
       .then((res) => res.json())
       .then((data) => {
         setOffres(data);
@@ -15,15 +16,51 @@ function Swipe() {
       });
   }, []);
 
+const envoyerFeedback = async (feedbackValue) => {
+  const offre = offres && offres.length > 0 ? offres[index] : null;
+  if (!offre || !offre.id) {
+    console.warn("Offre invalide :", offre);
+    return;
+  }
+
+  const userId = Number(localStorage.getItem("user_id"));
+  if (!userId) {
+    console.warn("User ID manquant !");
+    return;
+  }
+
+  const payload = {
+    offre_id: offre.id,
+    user_id: userId,
+    feedback: feedbackValue,
+  };
+
+  console.log("Envoi feedback payload:", payload);
+
+  try {
+    await fetch("http://localhost:5000/feedback", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    });
+  } catch (error) {
+    console.error("Erreur lors de l'envoi du feedback :", error);
+  }
+};
+  // 👍 LIKE
   const handleLike = () => {
     console.log("💚 J'aime :", offres[index]);
+    envoyerFeedback(1);
     setIndex((prev) => prev + 1);
   };
 
+  // 👎 SKIP
   const handleSkip = () => {
     console.log("❌ Passé :", offres[index]);
+    envoyerFeedback(0);
     setIndex((prev) => prev + 1);
   };
+
 
   const containerStyle = {
     maxWidth: "600px",

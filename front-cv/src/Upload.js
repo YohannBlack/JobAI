@@ -5,6 +5,7 @@ function Upload() {
   const [selectedFile, setSelectedFile] = useState(null);
   const [cvData, setCvData] = useState(null);
   const [user, setUser] = useState({ prenom: '', nom: '', email: '' });
+  const userId = localStorage.getItem("user_id");
 
   const navigate = useNavigate();
 
@@ -42,7 +43,7 @@ function Upload() {
 
       const data = await response.json();
       console.log("Réponse du backend :", data);
-      setCvData(data);
+      navigate("/review", { state: { cvData: data } });
     } catch (error) {
       console.error("Erreur :", error);
     }
@@ -165,19 +166,56 @@ function Upload() {
         />
         <button onClick={handleUpload} style={styles.button}>Uploader mon CV</button>
 
-        {cvData && (
-          <div style={styles.result}>
-            <div style={styles.resultTitle}>📄 Informations extraites :</div>
-            <div style={styles.resultItem}><strong>Nom :</strong> {cvData.nom}</div>
-            <div style={styles.resultItem}><strong>Email :</strong> {cvData.email}</div>
-            <div style={styles.resultItem}><strong>Téléphone :</strong> {cvData.telephone}</div>
-            <div style={styles.resultItem}><strong>Compétences :</strong> {cvData.competences}</div>
-            <div style={styles.resultItem}><strong>Adresse :</strong> {cvData.adresse}</div>
-            <button onClick={handleGoSwipe} style={styles.swipeButton}>
-              Go Swipe →
-            </button>
-          </div>
-        )}
+{cvData && (
+  <div style={styles.result}>
+    <div style={styles.resultTitle}>📄 Informations extraites :</div>
+    
+    {cvData.entities && cvData.entities.length > 0 ? (
+      cvData.entities.map((entity, index) => (
+        <div key={index} style={styles.resultItem}>
+          <label>
+            <strong>{entity.label}:</strong>
+            <input
+              type="text"
+              defaultValue={entity.text}
+              style={{ 
+                width: '100%', 
+                marginTop: '4px', 
+                padding: '6px', 
+                borderRadius: '6px', 
+                border: '1px solid #ccc',
+                marginBottom: '12px' 
+              }}
+              onChange={(e) => {
+                const updatedEntities = [...cvData.entities];
+                updatedEntities[index].text = e.target.value;
+                setCvData({ ...cvData, entities: updatedEntities });
+              }}
+            />
+          </label>
+        </div>
+      ))
+    ) : (
+      <pre style={{ whiteSpace: "pre-wrap", fontSize: "14px", lineHeight: "1.5" }}>
+        {cvData.extraction}
+      </pre>
+    )}
+
+    {cvData.summary && (
+      <>
+        <div style={styles.resultTitle}>🧠 Résumé intelligent :</div>
+        <div style={{ marginBottom: "10px", fontSize: "15px", lineHeight: "1.6" }}>
+          {cvData.summary}
+        </div>
+      </>
+    )}
+    <button onClick={handleGoSwipe} style={styles.swipeButton}>
+      Go Swipe
+    </button>
+  </div>
+)}
+
+
       </div>
     </div>
   );

@@ -55,10 +55,12 @@ else {
   })
     .then(res => res.json())
     .then(data => {
-      if (data.user) {
+      console.log("Réponse login :", data);
+      if (data.user && data.user.id) {
+        localStorage.setItem("user_id", data.user.id);
         localStorage.setItem('user', JSON.stringify(data.user));
         alert(data.message);
-        navigate('/upload');
+        navigate('/dashboard');
       } else {
         alert(data.error);
       }
