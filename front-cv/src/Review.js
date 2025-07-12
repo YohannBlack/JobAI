@@ -12,15 +12,41 @@ function Review() {
     }
   }, [cvData, navigate]);
 
-  const handleEntityChange = (index, value) => {
-    const updatedEntities = [...cvData.entities];
-    updatedEntities[index].text = value;
-    setCvData({ ...cvData, entities: updatedEntities });
-  };
+  const handleEntityChange = (label, value) => {
+  const updatedEntities = [...cvData.entities];
+  const index = updatedEntities.findIndex(e => e.label === label);
 
-  const handleGoSwipe = () => {
+  if (index !== -1) {
+    updatedEntities[index].text = value;
+  } else {
+    updatedEntities.push({ label, text: value });
+  }
+
+  setCvData({ ...cvData, entities: updatedEntities });
+};
+
+const handleGoSwipe = async () => {
+  try {
+    const response = await fetch("http://localhost:5000/update-profile", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        entities: cvData.entities,
+        blob_filename: cvData.blob_filename,
+      }),
+    });
+
+    if (!response.ok) {
+      throw new Error("Erreur lors de la mise à jour du profil");
+    }
+
     navigate("/swipe");
-  };
+  } catch (error) {
+    console.error("Erreur :", error);
+  }
+};
 
   const styles = {
     container: {
@@ -74,10 +100,7 @@ function Review() {
   <input
     type="text"
     value={cvData.entities.find(e => e.label === "PER")?.text || ""}
-    onChange={(e) => {
-      const i = cvData.entities.findIndex(e => e.label === "PER");
-      if (i !== -1) handleEntityChange(i, e.target.value);
-    }}
+    onChange={(e) => handleEntityChange("PER", e.target.value)}
     style={styles.input}
   />
 </div>
@@ -87,10 +110,7 @@ function Review() {
   <input
     type="text"
     value={cvData.entities.find(e => e.label === "LOC")?.text || ""}
-    onChange={(e) => {
-      const i = cvData.entities.findIndex(e => e.label === "LOC");
-      if (i !== -1) handleEntityChange(i, e.target.value);
-    }}
+    onChange={(e) => handleEntityChange("LOC", e.target.value)}
     style={styles.input}
   />
 </div>
@@ -100,10 +120,7 @@ function Review() {
   <input
     type="email"
     value={cvData.entities.find(e => e.label === "EMAIL")?.text || ""}
-    onChange={(e) => {
-      const i = cvData.entities.findIndex(e => e.label === "EMAIL");
-      if (i !== -1) handleEntityChange(i, e.target.value);
-    }}
+    onChange={(e) => handleEntityChange("EMAIL", e.target.value)}
     style={styles.input}
   />
 </div>
@@ -113,10 +130,7 @@ function Review() {
   <input
     type="tel"
     value={cvData.entities.find(e => e.label === "PHONE")?.text || ""}
-    onChange={(e) => {
-      const i = cvData.entities.findIndex(e => e.label === "PHONE");
-      if (i !== -1) handleEntityChange(i, e.target.value);
-    }}
+    onChange={(e) => handleEntityChange("PHONE", e.target.value)}
     style={styles.input}
   />
 </div>

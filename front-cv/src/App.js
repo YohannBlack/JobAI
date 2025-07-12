@@ -7,7 +7,7 @@ import Swipe from "./Swipe";
 import Historique from './Historique';
 import Dashboard from "./Dashboard";
 import Review from "./Review";
-
+import Navbar from "./Navbar";
 
 
 function App() {

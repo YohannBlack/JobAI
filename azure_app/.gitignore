@@ -96,7 +96,7 @@ celerybeat-schedule
 *.sage.py
 
 # Environments
-.env
+
 .venv
 env/
 venv/
@@ -133,6 +133,3 @@ __blobstorage__
 __queuestorage__
 __azurite_db*__.json
 .python_packages
-.env
-.venv
-.vscode

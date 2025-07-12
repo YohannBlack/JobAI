@@ -16,3 +16,6 @@ API France Travail : intégrée et utilisée comme deuxième source fiable.
 
 ## Recommandation
 - Cette partie reste à développer. Nous avons identifié les besoins et défini les grandes lignes, mais il faut avancer sur l’implémentation et les tests.
+
+
+# lightFM ==> conda install -c conda-forge lightfm --force-reinstall
