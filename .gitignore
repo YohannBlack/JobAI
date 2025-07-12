@@ -1,6 +1,6 @@
 # Environnement virtuel Python
 venv/
-
+.venv/
 # Dossiers Node.js
 front-cv/node_modules/
 
