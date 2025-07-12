@@ -110,6 +110,7 @@ front-cv/node_modules/
 # mkdocs documentation
 /site
 
+<<<<<<< HEAD
 # mypy
 .mypy_cache/
 .dmypy.json
@@ -132,3 +133,8 @@ __azurite_db*__.json
 .env
 .venv
 .vscode
+=======
+mlruns/
+outputs/
+.DS_Store
+>>>>>>> e87ebba (gitignore)
