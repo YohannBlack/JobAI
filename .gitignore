@@ -100,13 +100,9 @@ celerybeat-schedule
 .venv
 env/
 venv/
-ENV/
-env.bak/
-venv.bak/
-
-# Spyder project settings
-.spyderproject
-.spyproject
+.venv/
+# Dossiers Node.js
+front-cv/node_modules/
 
 # Rope project settings
 .ropeproject
@@ -114,25 +110,8 @@ venv.bak/
 # mkdocs documentation
 /site
 
-# mypy
-.mypy_cache/
-.dmypy.json
-dmypy.json
+mlruns/
+outputs/
+.DS_Store
 
-# Pyre type checker
-.pyre/
-
-# Azure Functions artifacts
-bin
-obj
-appsettings.json
-local.settings.json
-
-# Azurite artifacts
-__blobstorage__
-__queuestorage__
-__azurite_db*__.json
-.python_packages
-.env
-.venv
-.vscode
+__pycache__/

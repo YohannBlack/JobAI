@@ -1,0 +1,19 @@
+$schema: https://azuremlschemas.azureedge.net/latest/commandJob.schema.json
+inputs:
+  training_data:
+    type: uri_file
+    path: azureml://subscriptions/d2c9842b-923a-49d9-948e-50d8fd30d4ac/resourcegroups/PA2025/workspaces/PAML/datastores/workspaceblobstore/paths/UI/2025-07-12_172718_UTC/ner_training_with_city.json
+outputs:
+  model_output:
+    mode: rw_mount
+code: .
+command: >-
+  python train_ner_cv.py
+  --data-path ${{inputs.training_data}}
+  --output-dir ${{outputs.model_output}}
+environment:
+  conda_file: environment.yml
+  image: mcr.microsoft.com/azureml/openmpi4.1.0-ubuntu20.04
+compute: ner-compute
+experiment_name: cv_ner_retrain
+display_name: train-spacy-ner
