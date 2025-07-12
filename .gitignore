@@ -100,13 +100,9 @@ celerybeat-schedule
 .venv
 env/
 venv/
-ENV/
-env.bak/
-venv.bak/
-
-# Spyder project settings
-.spyderproject
-.spyproject
+.venv/
+# Dossiers Node.js
+front-cv/node_modules/
 
 # Rope project settings
 .ropeproject
