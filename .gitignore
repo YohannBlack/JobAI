@@ -137,4 +137,5 @@ __azurite_db*__.json
 mlruns/
 outputs/
 .DS_Store
->>>>>>> e87ebba (gitignore)
+
+__pycache__/
