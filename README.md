@@ -23,7 +23,7 @@
 | Reco Feedback | SVD (scikit-learn)               |
 | NER           | spaCy                            |
 | Base de données | SQL Server                     |
-| Cloud         | Azure Blob Storage               |
+| Cloud         | Azure Blob Storage, Azure Function, Azure Machine Learning               |
 | Géolocalisation | geopy, Nominatim               |
 
 ## Architecture du projet
