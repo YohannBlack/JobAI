@@ -18,7 +18,6 @@ def fetch_offres(myTimer: func.TimerRequest) -> None:
 
     logging.info("Début de la fonction fetch_offres")
 
-    # Connexion base de données
     try:
         driver = os.getenv("SQL_DRIVER")
         server = os.getenv("SQL_SERVER")
@@ -64,7 +63,6 @@ def fetch_offres(myTimer: func.TimerRequest) -> None:
         response.raise_for_status()
         return response.json()
 
-    # Pagination et insertion
     step = 150
     max_results = 3000
     start = 0

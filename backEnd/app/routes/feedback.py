@@ -28,7 +28,6 @@ def enregistrer_feedback():
         conn = get_connection()
         cursor = conn.cursor()
 
-        # Optionnel : éviter les doublons dans la table feedback
         cursor.execute("""
             SELECT COUNT(*) FROM feedback WHERE user_id = ? AND offre_id = ?
         """, (user_id, offre_id))
@@ -43,7 +42,6 @@ def enregistrer_feedback():
                 INSERT INTO feedback (offre_id, user_id, feedback) VALUES (?, ?, ?)
             """, (offre_id, user_id, feedback))
 
-        # Gestion du profil_ville (seulement pour les likes)
         if feedback == 1:
             cursor.execute("""
                 SELECT lieuTravail_libelle FROM francetravail WHERE id = ?

@@ -21,7 +21,7 @@ ml_client = MLClient(
 
 model = ml_client.models.get(name="cv_ner_train", version="20")
 
-print(f"✅ Model retrieved: {model.name}:{model.version}")
+print(f"Model retrieved: {model.name}:{model.version}")
 
 env = Environment(
     name="spacy-inference-env",
@@ -29,7 +29,7 @@ env = Environment(
     conda_file="env.yml",
     image="mcr.microsoft.com/azureml/minimal-ubuntu20.04-py310-cpu-inference:latest",
 )
-print(f"✅ Environment created: {env.name}")
+print(f"Environment created: {env.name}")
 
 ml_client.environments.create_or_update(env)
 
@@ -41,7 +41,7 @@ endpoint = ManagedOnlineEndpoint(
     auth_mode="key",
 )
 ml_client.online_endpoints.begin_create_or_update(endpoint).result()
-print(f"✅ Endpoint created: {endpoint.name}")
+print(f"Endpoint created: {endpoint.name}")
 
 print("Creating deployment...")
 deployment = ManagedOnlineDeployment(
@@ -53,7 +53,7 @@ deployment = ManagedOnlineDeployment(
     instance_type="Standard_DS2_v2",
     instance_count=1,
 )
-print(f"✅ Deployment created: {deployment.name}")
+print(f"Deployment created: {deployment.name}")
 ml_client.online_deployments.begin_create_or_update(deployment).result()
 
 ml_client.online_endpoints.begin_update(
@@ -61,4 +61,4 @@ ml_client.online_endpoints.begin_update(
     traffic={"blue": 100},
 ).result()
 
-print(f"✅ Endpoint created: {endpoint.name}")
+print(f"Endpoint created: {endpoint.name}")

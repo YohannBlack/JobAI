@@ -21,7 +21,6 @@ def train_recommendation(myTimer: func.TimerRequest) -> None:
 
     logging.info("Début de la fonction d'entraînement SVD")
     logging.info(f"Versions utilisées : numpy={numpy.__version__}, sklearn={sklearn.__version__}")
-    # Connexion à la base de données
     try:
         driver = os.getenv("SQL_DRIVER")
         server = os.getenv("SQL_SERVER")
@@ -43,7 +42,6 @@ def train_recommendation(myTimer: func.TimerRequest) -> None:
         return
 
     try:
-        # Extraction des feedbacks
         query = "SELECT user_id, offre_id, feedback FROM feedback"
         feedback_df = pd.read_sql(query, conn)
 
@@ -61,13 +59,11 @@ def train_recommendation(myTimer: func.TimerRequest) -> None:
             fill_value=0
         )
 
-        # Entraînement du modèle SVD
         svd = TruncatedSVD(n_components=10, random_state=42)
         svd.fit(interaction_matrix)
 
         logging.info("Modèle SVD entraîné avec succès")
 
-        # Sauvegarde locale
         model_filename = "/tmp/svd_model.pkl"
         with open(model_filename, "wb") as f:
             pickle.dump(svd, f)
