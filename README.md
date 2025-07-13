@@ -1,21 +1,132 @@
-### Avancement du projet
-## Interfaces utilisateur
-- Nous avons bien avancé sur la partie interfaces et pouvons désormais présenter un prototype fonctionnel pour les démonstrations.
 
-## Partie offre
-- Sources d’offres :
+# Job AI – Système intelligent de recommandation d’offres d’emploi
 
-Scrapper LinkedIn : opérationnel pour collecter des offres.
+> Un moteur de recommandation intelligent basé sur le NLP, la géolocalisation et le filtrage collaboratif pour aider les candidats à trouver les offres qui leur correspondent.
 
-API France Travail : intégrée et utilisée comme deuxième source fiable.
+## Fonctionnalités principales
 
- Reste à améliorer l’intégration et la déduplication entre les deux sources.
+- **Extraction de profil depuis un CV** (via NER + résumé automatique)
+- **Filtrage géographique** (rayon 60 km autour du lieu du candidat)
+- **Recommandation personnalisée** (TF-IDF + SVD)
+- **Apprentissage via feedback utilisateur** (`like` / `dislike`)
+- **Historique et visualisation des entités extraites**
+- **Stockage cloud avec Azure Blob Storage**
+- **Architecture modulaire** : Flask (backend) + React (frontend)
 
-## Extraction de texte à partir des PDF
- Nous avons développé un prototype pour extraire le texte des fichiers PDF. Il est fonctionnel mais encore perfectible en termes d’extraction et reconnaissances des entités contenues dans le texte
+## Stack technique
 
-## Recommandation
-- Cette partie reste à développer. Nous avons identifié les besoins et défini les grandes lignes, mais il faut avancer sur l’implémentation et les tests.
+| Composant     | Technologie                     |
+|---------------|----------------------------------|
+| Backend       | Python, Flask, SQLAlchemy        |
+| Frontend      | React, TailwindCSS               |
+| Reco NLP      | TF-IDF, Cosine Similarity        |
+| Reco Feedback | SVD (scikit-learn)               |
+| NER           | spaCy                            |
+| Base de données | SQL Server                     |
+| Cloud         | Azure Blob Storage               |
+| Géolocalisation | geopy, Nominatim (OpenStreetMap) |
 
+## Architecture du projet
 
-# lightFM ==> conda install -c conda-forge lightfm --force-reinstall
+```
+JobAI/
+├── __pycache__/
+├── python_packages/
+├── venv/
+├── .vscode/
+├── az_func_offres_francetravail/
+├── az_func_recommendation/
+├── az_ml_ner/
+├── backend/
+│   ├── venv-py310/
+│   └── app/
+│       ├── __pycache__/
+│       ├── models/
+│       └── routes/
+│           ├── __pycache__/
+│           ├── __init__.py
+│           ├── auth.py
+│           ├── cv.py
+│           ├── extract.py
+│           ├── feedback.py
+│           └── offres.py
+├── services/
+│   ├── __pycache__/
+│   ├── __init__.py
+│   ├── extract_text.py
+│   ├── ner_processing.py
+│   ├── profil_builder.py
+│   └── recommender.py
+├── utils/
+│   ├── __pycache__/
+│   ├── __init__.py
+│   ├── db.py
+│   ├── ner.py
+│   ├── summarizer.py
+│   └── text_processing.py
+├── __init__.py
+├── run.py
+├── front-cv/
+├── .env
+├── .gitignore
+├── README.md
+└── requirements.txt
+```
+
+## Installation
+
+### 1. Cloner le dépôt
+```bash
+[git clone https://github.com/ton-compte/job-ai.git](https://github.com/YohannBlack/JobAI)
+cd job-ai
+```
+
+### 2. Créer un environnement virtuel Python
+```bash
+python -m venv .venv
+.venv\Scripts\activate #sur Windows
+```
+
+### 3. Installer les dépendances
+```bash
+pip install -r requirements.txt
+```
+
+### 4. Configurer les variables d’environnement `.env`
+```env
+AZURE_STORAGE_CONNECTION_STRING=...
+SQL_SERVER=...
+SQL_DATABASE=...
+SQL_USERNAME=...
+SQL_PASSWORD=...
+```
+
+## Lancer l’application
+
+```bash
+cv backEnd
+python run.py
+```
+
+Frontend React :
+```bash
+cd front-cv
+npm install
+npm start
+```
+
+## Recommandation – Détails techniques
+
+- **Matching sémantique** : le profil candidat est vectorisé avec TF-IDF, comparé aux offres.
+- **Personnalisation** : les feedbacks (`like`/`dislike`) alimentent un modèle SVD.
+- **Filtrage géographique** : seules les offres à moins de 60 km sont gardées.
+- **NER + Résumé automatique** : le CV est transformé en un profil compact et pertinent.
+
+## Perspectives d’évolution
+
+- Intégration d’un modèle **LightFM** ou **FAISS** pour plus de scalabilité
+- **Filtrage multi-critères** (contrat, salaire, secteur)
+- **Traduction automatique** pour les profils multilingues
+- Dashboard d’**analyse de performance du système**
+- Mode **recruteur** avec remontée des profils pertinents
+
