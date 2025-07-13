@@ -30,20 +30,13 @@
 
 ```
 JobAI/
-├── __pycache__/
-├── python_packages/
-├── venv/
-├── .vscode/
 ├── az_func_offres_francetravail/
 ├── az_func_recommendation/
 ├── az_ml_ner/
 ├── backend/
-│   ├── venv-py310/
 │   └── app/
-│       ├── __pycache__/
 │       ├── models/
 │       └── routes/
-│           ├── __pycache__/
 │           ├── __init__.py
 │           ├── auth.py
 │           ├── cv.py
@@ -51,14 +44,12 @@ JobAI/
 │           ├── feedback.py
 │           └── offres.py
 ├── services/
-│   ├── __pycache__/
 │   ├── __init__.py
 │   ├── extract_text.py
 │   ├── ner_processing.py
 │   ├── profil_builder.py
 │   └── recommender.py
 ├── utils/
-│   ├── __pycache__/
 │   ├── __init__.py
 │   ├── db.py
 │   ├── ner.py
@@ -77,8 +68,8 @@ JobAI/
 
 ### 1. Cloner le dépôt
 ```bash
-[git clone https://github.com/ton-compte/job-ai.git](https://github.com/YohannBlack/JobAI)
-cd job-ai
+git clone https://github.com/ton-compte/JobAI.git
+cd JobAI
 ```
 
 ### 2. Créer un environnement virtuel Python
