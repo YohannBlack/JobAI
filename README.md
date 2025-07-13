@@ -30,24 +30,47 @@
 
 ```
 JobAI/
-│
-├── app/
-│   ├── routes/
-│   │   ├── extract.py       # Extraction de données du CV
-│   │   ├── offres.py        # Recommandation d’offres
-│   │   ├── feedback.py      # Like / Dislike
-│   ├── utils/
-│   │   ├── ner.py           # Modèle NER
-│   │   └── db.py            # Connexion à SQL Server
-│   └── app.py               # Point d'entrée Flask
-│
-├── frontend/                # Application React (optionnel)
-│
-├── azure_app/               # Déploiement Azure Function (si utilisé)
-│
-├── requirements.txt
+├── __pycache__/
+├── python_packages/
+├── venv/
+├── .vscode/
+├── az_func_offres_francetravail/
+├── az_func_recommendation/
+├── az_ml_ner/
+├── backend/
+│   ├── venv-py310/
+│   └── app/
+│       ├── __pycache__/
+│       ├── models/
+│       └── routes/
+│           ├── __pycache__/
+│           ├── __init__.py
+│           ├── auth.py
+│           ├── cv.py
+│           ├── extract.py
+│           ├── feedback.py
+│           └── offres.py
+├── services/
+│   ├── __pycache__/
+│   ├── __init__.py
+│   ├── extract_text.py
+│   ├── ner_processing.py
+│   ├── profil_builder.py
+│   └── recommender.py
+├── utils/
+│   ├── __pycache__/
+│   ├── __init__.py
+│   ├── db.py
+│   ├── ner.py
+│   ├── summarizer.py
+│   └── text_processing.py
+├── __init__.py
+├── run.py
+├── front-cv/
+├── .env
+├── .gitignore
 ├── README.md
-└── .env
+└── requirements.txt
 ```
 
 ## Installation
