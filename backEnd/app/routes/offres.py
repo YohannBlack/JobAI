@@ -8,14 +8,14 @@ from geopy.geocoders import Nominatim
 from flask import Blueprint, request, jsonify
 import logging
 from app.utils.db import get_connection
-
+import os
 from azure.storage.blob import BlobServiceClient
 import pickle
 import io
 
 def load_svd_model_from_blob():
     conn_str = os.getenv("AZURE_STORAGE_CONNECTION_STRING")
-    container_name = os.getenv("AZURE_CONTAINER_NAME")
+    container_name = os.getenv("AZURE__RECOMMANDATION_CONTAINER_NAME")
 
     blob_service_client = BlobServiceClient.from_connection_string(conn_str)
     container_client = blob_service_client.get_container_client(container_name)
@@ -84,7 +84,9 @@ def get_offres():
             return jsonify([])
 
          ### SVD : Recommandation basée sur feedback utilisateur ###
-        interaction_matrix = feedback_df.pivot_table(index='user_id', columns='offre_id', values='feedback', fill_value=0)
+        interaction_matrix = feedback_df.pivot_table(
+            index='user_id', columns='offre_id', values='feedback', fill_value=0
+        )
         user_id_int = int(user_id)
 
         if user_id_int not in interaction_matrix.index:
@@ -98,7 +100,7 @@ def get_offres():
                 user_idx = interaction_matrix.index.tolist().index(user_id_int)
                 user_pred = predicted_scores[user_idx]
 
-                # Masquer les offres déjà notées
+                # pour masquer les offres que l'utilisateur a deja vu
                 mask = interaction_matrix.loc[user_id_int].values > 0
                 user_pred[mask] = -np.inf
 

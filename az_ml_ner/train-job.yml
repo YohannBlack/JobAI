@@ -5,7 +5,7 @@ inputs:
     path: azureml://subscriptions/d2c9842b-923a-49d9-948e-50d8fd30d4ac/resourcegroups/PA2025/workspaces/PAML/datastores/workspaceblobstore/paths/UI/2025-07-12_172718_UTC/ner_training_with_city.json
 outputs:
   model_output:
-    mode: rw_mount
+    type: uri_folder
 code: .
 command: >-
   python train_ner_cv.py

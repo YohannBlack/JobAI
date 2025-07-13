@@ -115,3 +115,4 @@ outputs/
 .DS_Store
 
 __pycache__/
+backEnd/.venv-py310/
