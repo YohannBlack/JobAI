@@ -76,6 +76,7 @@ cd JobAI
 ```bash
 python -m venv .venv
 .venv\Scripts\activate #sur Windows
+source .venv/bin/activate #sur Linux/OSX
 ```
 
 ### 3. Installer les dépendances
