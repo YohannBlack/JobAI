@@ -15,16 +15,16 @@
 
 ## Stack technique
 
-| Composant     | Technologie                     |
+| Composant     | Technologie                      |
 |---------------|----------------------------------|
-| Backend       | Python, Flask, SQLAlchemy        |
-| Frontend      | React, TailwindCSS               |
+| Backend       | Python, Flask                    |
+| Frontend      | React                            |
 | Reco NLP      | TF-IDF, Cosine Similarity        |
 | Reco Feedback | SVD (scikit-learn)               |
 | NER           | spaCy                            |
 | Base de données | SQL Server                     |
 | Cloud         | Azure Blob Storage               |
-| Géolocalisation | geopy, Nominatim (OpenStreetMap) |
+| Géolocalisation | geopy, Nominatim               |
 
 ## Architecture du projet
 
@@ -124,7 +124,6 @@ npm start
 
 ## Perspectives d’évolution
 
-- Intégration d’un modèle **LightFM** ou **FAISS** pour plus de scalabilité
 - **Filtrage multi-critères** (contrat, salaire, secteur)
 - **Traduction automatique** pour les profils multilingues
 - Dashboard d’**analyse de performance du système**
