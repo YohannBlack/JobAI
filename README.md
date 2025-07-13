@@ -104,7 +104,7 @@ SQL_PASSWORD=...
 ## Lancer l’application
 
 ```bash
-cv backEnd
+cd backEnd
 python run.py
 ```
 
