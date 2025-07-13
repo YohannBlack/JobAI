@@ -54,14 +54,14 @@ JobAI/
 
 ### 1. Cloner le dépôt
 ```bash
-git clone https://github.com/ton-compte/job-ai.git
+[git clone https://github.com/ton-compte/job-ai.git](https://github.com/YohannBlack/JobAI)
 cd job-ai
 ```
 
 ### 2. Créer un environnement virtuel Python
 ```bash
 python -m venv .venv
-source .venv/bin/activate  # ou .venv\Scripts\activate sur Windows
+.venv\Scripts\activate #sur Windows
 ```
 
 ### 3. Installer les dépendances
@@ -81,14 +81,15 @@ SQL_PASSWORD=...
 ## Lancer l’application
 
 ```bash
-flask run
+cv backEnd
+python run.py
 ```
 
-Frontend React (si utilisé) :
+Frontend React :
 ```bash
-cd frontend
+cd front-cv
 npm install
-npm run dev
+npm start
 ```
 
 ## Recommandation – Détails techniques
