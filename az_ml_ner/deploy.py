@@ -1,3 +1,4 @@
+import os
 import uuid
 
 from azure.ai.ml import MLClient
@@ -7,12 +8,15 @@ from azure.ai.ml.entities import (
                                   ManagedOnlineEndpoint,
 )
 from azure.identity import DefaultAzureCredential
+from dotenv import load_dotenv
+
+load_dotenv()
 
 ml_client = MLClient(
     credential=DefaultAzureCredential(),
-    subscription_id="d2c9842b-923a-49d9-948e-50d8fd30d4ac",
-    resource_group_name="PA2025",
-    workspace_name="PAML",
+    subscription_id=os.environ.get("SUBSCRIPTION_ID"),
+    resource_group_name=os.environ.get("RESOURCE_GROUP"),
+    workspace_name=os.environ.get("WORKSPACE_NAME"),
 )
 
 model = ml_client.models.get(name="cv_ner_train", version="20")
