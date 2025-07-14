@@ -24,13 +24,12 @@ jobs:
         with:
           python-version: '3.10'
 
-      - name: Create and start virtual environment
+      - name: Install dependencies
         run: |
           python -m venv venv
           source venv/bin/activate
-      
-      - name: Install dependencies
-        run: pip install -r requirements.txt
+          pip install -r requirements.txt
+        working-directory: backEnd
         
       # Optional: Add step to run tests here (PyTest, Django test suites, etc.)
 
@@ -76,4 +75,5 @@ jobs:
         with:
           app-name: 'JobAi-Backend'
           slot-name: 'Production'
+          package: './backEnd'
           

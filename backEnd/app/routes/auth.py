@@ -1,7 +1,9 @@
-from flask import Blueprint, request, jsonify
-from app.utils.db import get_connection
 import hashlib
+
 import pyodbc
+from flask import Blueprint, jsonify, request
+
+from app.utils.db import get_connection
 
 auth_bp = Blueprint("auth", __name__)  # Un seul blueprint pour tout ce module
 
@@ -9,6 +11,9 @@ auth_bp = Blueprint("auth", __name__)  # Un seul blueprint pour tout ce module
 def hash_password(password):
     return hashlib.sha256(password.encode()).hexdigest()
 
+@auth_bp.route("/test", methods=["GET"])
+def test():
+    return jsonify({"message": "OK"}), 200
 
 @auth_bp.route('/register', methods=['POST'])
 def register():
@@ -61,4 +66,5 @@ def login():
             }
         })
     else:
+        return jsonify({"error": "Email ou mot de passe invalide"}), 401
         return jsonify({"error": "Email ou mot de passe invalide"}), 401
