@@ -31,7 +31,7 @@ Pillow
 protobuf
 pycparser
 PyMuPDF
-pyodbc
+pyodbc==4.0.34
 python-dateutil
 python-dotenv
 pytz
