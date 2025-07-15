@@ -7,7 +7,10 @@ function Historique() {
   useEffect(() => {
     if (!userId) return;
 
-    fetch(`https://172.189.14.214/historique_likes?user_id=${userId}`)
+    fetch(`https://172.189.14.214/historique_likes?user_id=${userId}`, {
+      method: "GET",
+      mode: "cors",
+    })
       .then((res) => res.json())
       .then((data) => {
         setLikedOffres(data);

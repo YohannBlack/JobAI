@@ -49,7 +49,7 @@ function Login() {
 } 
 else {
     if (email && password) {
-  fetch("http://172.189.14.214/login", {
+  fetch("https://172.189.14.214/login", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ email, password }),
