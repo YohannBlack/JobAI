@@ -28,16 +28,16 @@ function Login() {
    if (isRegistering) {
   if (prenom && nom && email && password) {
 
-    fetch("http://localhost:5000/register", {
+    fetch("http://172.189.111.105:5000/register", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(formData),
     })
-      .then(res => res.json())
-      .then(data => {
+      .then((res) => res.json())
+      .then((data) => {
         if (data.message) {
           alert(data.message);
-          navigate('/upload');
+          navigate("/upload");
         } else {
           alert(data.error);
         }
@@ -48,19 +48,19 @@ function Login() {
 } 
 else {
     if (email && password) {
-  fetch("http://localhost:5000/login", {
+  fetch("http://172.189.111.105:5000/login", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ email, password }),
   })
-    .then(res => res.json())
-    .then(data => {
+    .then((res) => res.json())
+    .then((data) => {
       console.log("Réponse login :", data);
       if (data.user && data.user.id) {
         localStorage.setItem("user_id", data.user.id);
-        localStorage.setItem('user', JSON.stringify(data.user));
+        localStorage.setItem("user", JSON.stringify(data.user));
         alert(data.message);
-        navigate('/dashboard');
+        navigate("/dashboard");
       } else {
         alert(data.error);
       }

@@ -27,7 +27,7 @@ function Review() {
 
 const handleGoSwipe = async () => {
   try {
-    const response = await fetch("http://localhost:5000/update-profile", {
+    const response = await fetch("http://172.189.111.105:5000/update-profile", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

@@ -7,12 +7,12 @@ function Historique() {
   useEffect(() => {
     if (!userId) return;
 
-    fetch(`http://localhost:5000/historique_likes?user_id=${userId}`)
-      .then(res => res.json())
-      .then(data => {
+    fetch(`http://172.189.111.105:5000/historique_likes?user_id=${userId}`)
+      .then((res) => res.json())
+      .then((data) => {
         setLikedOffres(data);
       })
-      .catch(err => console.error(err));
+      .catch((err) => console.error(err));
   }, [userId]);
 
   if (!userId) {
