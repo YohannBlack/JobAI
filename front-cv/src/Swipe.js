@@ -6,7 +6,10 @@ function Swipe() {
   const userId = localStorage.getItem("user_id");
 
   useEffect(() => {
-    fetch(`http://172.189.111.105:5000/offres?user_id=${userId}`)
+    fetch(`https://172.189.14.214/offres?user_id=${userId}`, {
+      method: "GET",
+      mode: "cors",
+    })
       .then((res) => res.json())
       .then((data) => {
         setOffres(data);
@@ -38,10 +41,11 @@ function Swipe() {
     console.log("Envoi feedback payload:", payload);
 
     try {
-      await fetch("http://172.189.111.105:5000/feedback", {
+      await fetch("https://172.189.14.214/feedback", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
+        mode: "cors",
       });
     } catch (error) {
       console.error("Erreur lors de l'envoi du feedback :", error);

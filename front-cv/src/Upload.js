@@ -32,9 +32,10 @@ function Upload() {
     formData.append("file", selectedFile);
 
     try {
-      const response = await fetch("http://172.189.111.105:5000/extract", {
+      const response = await fetch("https://172.189.14.214/extract", {
         method: "POST",
         body: formData,
+        mode: "cors",
       });
 
       if (!response.ok) {

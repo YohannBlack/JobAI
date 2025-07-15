@@ -27,7 +27,7 @@ function Review() {
 
 const handleGoSwipe = async () => {
   try {
-    const response = await fetch("http://172.189.111.105:5000/update-profile", {
+    const response = await fetch("https://172.189.14.214/update-profile", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -36,6 +36,7 @@ const handleGoSwipe = async () => {
         entities: cvData.entities,
         blob_filename: cvData.blob_filename,
       }),
+      mode: "cors",
     });
 
     if (!response.ok) {

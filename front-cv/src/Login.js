@@ -28,10 +28,11 @@ function Login() {
    if (isRegistering) {
   if (prenom && nom && email && password) {
 
-    fetch("http://172.189.111.105:5000/register", {
+    fetch("https://172.189.14.214/register", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(formData),
+      mode: "cors",
     })
       .then((res) => res.json())
       .then((data) => {
@@ -48,10 +49,11 @@ function Login() {
 } 
 else {
     if (email && password) {
-  fetch("http://172.189.111.105:5000/login", {
+  fetch("http://172.189.14.214/login", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ email, password }),
+    mode: "cors",
   })
     .then((res) => res.json())
     .then((data) => {

@@ -16,7 +16,10 @@ export default function Dashboard() {
         return;
       }
 
-      const response = await fetch(`http://172.189.111.105:5000/cv/${userId}`);
+      const response = await fetch(`https://172.189.14.214/cv/${userId}`, {
+        method: "GET",
+        mode: "cors",
+      });
       const data = await response.json();
 
       if (response.ok && data.url) {
