@@ -9,7 +9,6 @@ function Historique() {
 
     fetch(`https://172.189.14.214/historique_likes?user_id=${userId}`, {
       method: "GET",
-      mode: "cors",
     })
       .then((res) => res.json())
       .then((data) => {

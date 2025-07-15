@@ -8,7 +8,6 @@ function Swipe() {
   useEffect(() => {
     fetch(`https://172.189.14.214/offres?user_id=${userId}`, {
       method: "GET",
-      mode: "cors",
     })
       .then((res) => res.json())
       .then((data) => {
@@ -45,7 +44,6 @@ function Swipe() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
-        mode: "cors",
       });
     } catch (error) {
       console.error("Erreur lors de l'envoi du feedback :", error);

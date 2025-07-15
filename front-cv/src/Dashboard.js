@@ -18,7 +18,6 @@ export default function Dashboard() {
 
       const response = await fetch(`https://172.189.14.214/cv/${userId}`, {
         method: "GET",
-        mode: "cors",
       });
       const data = await response.json();
 

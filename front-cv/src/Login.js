@@ -32,7 +32,6 @@ function Login() {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(formData),
-      mode: "cors",
     })
       .then((res) => res.json())
       .then((data) => {
@@ -53,7 +52,6 @@ else {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ email, password }),
-    mode: "cors",
   })
     .then((res) => res.json())
     .then((data) => {

@@ -35,7 +35,6 @@ function Upload() {
       const response = await fetch("https://172.189.14.214/extract", {
         method: "POST",
         body: formData,
-        mode: "cors",
       });
 
       if (!response.ok) {

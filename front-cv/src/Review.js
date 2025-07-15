@@ -36,7 +36,6 @@ const handleGoSwipe = async () => {
         entities: cvData.entities,
         blob_filename: cvData.blob_filename,
       }),
-      mode: "cors",
     });
 
     if (!response.ok) {
