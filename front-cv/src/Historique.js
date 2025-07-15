@@ -7,7 +7,7 @@ function Historique() {
   useEffect(() => {
     if (!userId) return;
 
-    fetch(`/historique_likes?user_id=${userId}`, {
+    fetch(`https://172.189.14.214/historique_likes?user_id=${userId}`, {
       method: "GET",
     })
       .then((res) => res.json())

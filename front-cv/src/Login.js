@@ -28,7 +28,7 @@ function Login() {
    if (isRegistering) {
   if (prenom && nom && email && password) {
 
-    fetch("/register", {
+    fetch("https://172.189.14.214/register", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(formData),
@@ -48,7 +48,7 @@ function Login() {
 } 
 else {
     if (email && password) {
-  fetch("/login", {
+  fetch("https://172.189.14.214/login", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ email, password }),
