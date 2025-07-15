@@ -16,7 +16,7 @@ export default function Dashboard() {
         return;
       }
 
-      const response = await fetch(`https://172.189.14.214/cv/${userId}`, {
+      const response = await fetch(`https://172.189.111.146/cv/${userId}`, {
         method: "GET",
       });
       const data = await response.json();

@@ -32,7 +32,7 @@ function Upload() {
     formData.append("file", selectedFile);
 
     try {
-      const response = await fetch("https://172.189.14.214/extract", {
+      const response = await fetch("https://172.189.111.146/extract", {
         method: "POST",
         body: formData,
       });
