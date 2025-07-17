@@ -1,38 +1,50 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
+import Navbar from './Navbar';
 
 function Upload() {
   const [selectedFile, setSelectedFile] = useState(null);
   const [cvData, setCvData] = useState(null);
   const [user, setUser] = useState({ prenom: '', nom: '', email: '' });
+  const [error, setError] = useState('');
   const userId = localStorage.getItem("user_id");
-
   const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
     const savedUser = localStorage.getItem('user');
     if (savedUser) {
-      setUser(JSON.parse(savedUser));
+      const userData = JSON.parse(savedUser);
+      setUser(userData);
+      
+      // Rediriger les nouveaux utilisateurs depuis l'inscription
+      if (location.state?.fromRegister) {
+        setError('Veuillez uploader votre CV pour compléter votre profil');
+      }
+    } else {
+      navigate('/login');
     }
-  }, []);
+  }, [location.state, navigate]);
 
   const handleFileChange = (event) => {
     setSelectedFile(event.target.files[0]);
+    setError('');
   };
 
   const handleUpload = async (e) => {
     e.preventDefault();
 
     if (!selectedFile) {
-      alert("Aucun fichier sélectionné");
+      setError("Veuillez sélectionner un fichier PDF");
       return;
     }
 
     const formData = new FormData();
     formData.append("file", selectedFile);
+    formData.append("userId", userId);
 
     try {
-      const response = await fetch(`https://flask-backend-hwagfjehhhc0hzby.francecentral-01.azurewebsites.net/extract`, {
+      const response = await fetch("https://blue-grass-09f01bd03.1.azurestaticapps.ne/extract", {
         method: "POST",
         body: formData,
       });
@@ -42,180 +54,164 @@ function Upload() {
       }
 
       const data = await response.json();
+      
+      // Vérifier que l'email du CV correspond à l'email de l'utilisateur
+      if (data.entities) {
+        const emailEntity = data.entities.find(e => e.label.toLowerCase() === 'email');
+        if (emailEntity && emailEntity.text !== user.email) {
+          setError("L'email du CV ne correspond pas à votre email de connexion");
+          return;
+        }
+      }
+
       console.log("Réponse du backend :", data);
       navigate("/review", { state: { cvData: data } });
     } catch (error) {
       console.error("Erreur :", error);
+      setError("Une erreur est survenue lors de l'upload");
     }
-  };
-
-  const handleGoSwipe = () => {
-    navigate("/swipe");
   };
 
   const styles = {
     container: {
-      background: 'linear-gradient(135deg, #1f1c2c, #928dab)',
       minHeight: '100vh',
-      display: 'flex',
-      justifyContent: 'center',
-      alignItems: 'center',
-      padding: '20px',
+      background: 'linear-gradient(135deg, #1f1c2c 0%, #928dab 100%)',
+      paddingTop: '70px',
+    },
+    content: {
+      maxWidth: '800px',
+      margin: '0 auto',
+      padding: '40px 20px',
     },
     card: {
-      backgroundColor: '#ffffff',
-      padding: '40px 30px',
-      borderRadius: '16px',
-      boxShadow: '0 10px 30px rgba(0, 0, 0, 0.1)',
-      width: '100%',
-      maxWidth: '500px',
+      backgroundColor: '#fff',
+      padding: '40px',
+      borderRadius: '20px',
+      boxShadow: '0 10px 30px rgba(0,0,0,0.15)',
       textAlign: 'center',
     },
-    logo: {
-      width: '140px',
-      marginBottom: '20px',
-      display: 'block',
-      marginLeft: 'auto',
-      marginRight: 'auto',
-      filter: 'drop-shadow(0 0 6px rgba(0, 0, 0, 0.25))',
-      backgroundColor: '#fff',
-      padding: '6px',
-      borderRadius: '12px',
-    },
     title: {
-      fontSize: '22px',
-      marginBottom: '8px',
-      color: '#333',
-      fontWeight: '600',
+      fontSize: '2rem',
+      fontWeight: '700',
+      marginBottom: '10px',
+      color: '#1f1c2c',
     },
     subtitle: {
-      fontSize: '14px',
-      color: '#777',
-      marginBottom: '24px',
+      fontSize: '1.1rem',
+      color: '#666',
+      marginBottom: '30px',
     },
-    input: {
-      marginBottom: '16px',
-      display: 'block',
-      marginLeft: 'auto',
-      marginRight: 'auto',
+    fileInputContainer: {
+      margin: '30px 0',
     },
     fileInput: {
-      padding: '10px',
-      borderRadius: '8px',
-      border: '1px solid #ccc',
-      fontSize: '15px',
-      width: '100%',
-      maxWidth: '320px',
-      marginBottom: '16px',
+      width: '0.1px',
+      height: '0.1px',
+      opacity: '0',
+      overflow: 'hidden',
+      position: 'absolute',
+      zIndex: '-1',
     },
-    button: {
+    fileInputLabel: {
       backgroundColor: '#e63946',
       color: '#fff',
-      border: 'none',
-      padding: '12px',
-      borderRadius: '8px',
-      fontSize: '16px',
-      cursor: 'pointer',
-      fontWeight: 'bold',
-      width: '100%',
-      maxWidth: '320px',
-      marginBottom: '20px',
-    },
-    result: {
-      backgroundColor: '#f5f5f5',
-      padding: '20px',
-      borderRadius: '10px',
-      textAlign: 'left',
-      marginTop: '30px',
-      boxShadow: '0 4px 10px rgba(0,0,0,0.05)',
-    },
-    resultTitle: {
-      marginBottom: '10px',
-      fontWeight: 'bold',
+      padding: '15px 30px',
+      borderRadius: '25px',
       fontSize: '18px',
+      fontWeight: '600',
+      cursor: 'pointer',
+      transition: 'all 0.3s ease',
+      boxShadow: '0 4px 15px rgba(230, 57, 70, 0.3)',
+      display: 'inline-block',
+      ':hover': {
+        transform: 'translateY(-2px)',
+        boxShadow: '0 6px 20px rgba(230, 57, 70, 0.4)',
+      },
     },
-    resultItem: {
-      marginBottom: '6px',
+    fileName: {
+      marginTop: '15px',
+      fontSize: '14px',
+      color: '#666',
     },
-    swipeButton: {
-      backgroundColor: '#2196F3',
+    button: {
+      backgroundColor: '#1f1c2c',
       color: '#fff',
       border: 'none',
-      padding: '12px',
-      borderRadius: '8px',
-      fontSize: '16px',
+      padding: '15px 30px',
+      borderRadius: '25px',
+      fontSize: '18px',
+      fontWeight: '600',
       cursor: 'pointer',
-      fontWeight: 'bold',
-      width: '100%',
-      maxWidth: '320px',
+      transition: 'all 0.3s ease',
+      boxShadow: '0 4px 15px rgba(0,0,0,0.1)',
       marginTop: '20px',
-    }
+      ':hover': {
+        backgroundColor: '#333',
+        transform: 'translateY(-2px)',
+      },
+    },
+    error: {
+      color: '#e63946',
+      margin: '20px 0',
+      fontWeight: '500',
+    },
+    userInfo: {
+      backgroundColor: '#f8f9fa',
+      padding: '20px',
+      borderRadius: '10px',
+      marginBottom: '30px',
+      textAlign: 'left',
+    },
+    infoText: {
+      margin: '5px 0',
+      color: '#333',
+    },
   };
 
   return (
     <div style={styles.container}>
-      <div style={styles.card}>
-        <img src="/logo.png" alt="Logo JobAI" style={styles.logo} />
-        <h1 style={styles.title}>Bienvenue {user.prenom} {user.nom}</h1>
-        <p style={styles.subtitle}>Téléverse ton CV ici (PDF uniquement)</p>
-        <input
-          type="file"
-          accept=".pdf"
-          onChange={handleFileChange}
-          style={styles.fileInput}
-        />
-        <button onClick={handleUpload} style={styles.button}>Uploader mon CV</button>
+      <Navbar />
+      
+      <div style={styles.content}>
+        <div style={styles.card}>
+          <h1 style={styles.title}>Uploader votre CV</h1>
+          <p style={styles.subtitle}>
+            {user.prenom ? `Bienvenue ${user.prenom} ${user.nom}` : 'Complétez votre profil'}
+          </p>
 
-{cvData && (
-  <div style={styles.result}>
-    <div style={styles.resultTitle}>📄 Informations extraites :</div>
-    
-    {cvData.entities && cvData.entities.length > 0 ? (
-      cvData.entities.map((entity, index) => (
-        <div key={index} style={styles.resultItem}>
-          <label>
-            <strong>{entity.label}:</strong>
+          <div style={styles.userInfo}>
+            <p style={styles.infoText}><strong>Email enregistré :</strong> {user.email}</p>
+            <p style={styles.infoText}>Votre CV doit contenir cet email pour vérification</p>
+          </div>
+
+          {error && <div style={styles.error}>{error}</div>}
+
+          <div style={styles.fileInputContainer}>
             <input
-              type="text"
-              defaultValue={entity.text}
-              style={{ 
-                width: '100%', 
-                marginTop: '4px', 
-                padding: '6px', 
-                borderRadius: '6px', 
-                border: '1px solid #ccc',
-                marginBottom: '12px' 
-              }}
-              onChange={(e) => {
-                const updatedEntities = [...cvData.entities];
-                updatedEntities[index].text = e.target.value;
-                setCvData({ ...cvData, entities: updatedEntities });
-              }}
+              type="file"
+              id="fileInput"
+              accept=".pdf"
+              onChange={handleFileChange}
+              style={styles.fileInput}
             />
-          </label>
+            <label htmlFor="fileInput" style={styles.fileInputLabel}>
+              Sélectionner un fichier PDF
+            </label>
+            {selectedFile && (
+              <div style={styles.fileName}>
+                Fichier sélectionné : {selectedFile.name}
+              </div>
+            )}
+          </div>
+
+          <button 
+            onClick={handleUpload} 
+            style={styles.button}
+            disabled={!selectedFile}
+          >
+            Analyser mon CV
+          </button>
         </div>
-      ))
-    ) : (
-      <pre style={{ whiteSpace: "pre-wrap", fontSize: "14px", lineHeight: "1.5" }}>
-        {cvData.extraction}
-      </pre>
-    )}
-
-    {cvData.summary && (
-      <>
-        <div style={styles.resultTitle}>🧠 Résumé intelligent :</div>
-        <div style={{ marginBottom: "10px", fontSize: "15px", lineHeight: "1.6" }}>
-          {cvData.summary}
-        </div>
-      </>
-    )}
-    <button onClick={handleGoSwipe} style={styles.swipeButton}>
-      Go Swipe
-    </button>
-  </div>
-)}
-
-
       </div>
     </div>
   );

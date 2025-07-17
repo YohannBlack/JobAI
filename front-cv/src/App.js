@@ -5,21 +5,42 @@ import Login from './Login';
 import Upload from './Upload';
 import Swipe from "./Swipe";
 import Historique from './Historique';
-import Dashboard from "./Dashboard";
 import Review from "./Review";
-import Navbar from "./Navbar";
-
+import Home from "./Home";
+import CVViewer from "./CVViewer";
+import ProtectedRoute from './ProtectedRoute';
 
 function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<Login />} />
-        <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/upload" element={<Upload />} />
-        <Route path="/swipe" element={<Swipe />} />
-        <Route path="/Historique" element={<Historique />} />
-        <Route path="/review" element={<Review />} />
+        <Route path="/" element={<Home />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/upload" element={
+          <ProtectedRoute>
+            <Upload />
+          </ProtectedRoute>
+        } />
+        <Route path="/swipe" element={
+          <ProtectedRoute>
+            <Swipe />
+          </ProtectedRoute>
+        } />
+        <Route path="/historique" element={
+          <ProtectedRoute>
+            <Historique />
+          </ProtectedRoute>
+        } />
+        <Route path="/review" element={
+          <ProtectedRoute>
+            <Review />
+          </ProtectedRoute>
+        } />
+        <Route path="/cv" element={
+          <ProtectedRoute>
+            <CVViewer />
+          </ProtectedRoute>
+        } />
       </Routes>
     </Router>
   );
