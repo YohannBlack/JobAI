@@ -19,6 +19,7 @@ function Navbar() {
     { path: '/upload', label: 'Upload CV', icon: '📄' },
     { path: '/swipe', label: 'Swiper', icon: '💼' },
     { path: '/historique', label: 'Historique', icon: '📋' },
+    { path: '/cv', label: 'Mon CV', icon: '👁️' },
   ];
 
   // Styles pour le logo
