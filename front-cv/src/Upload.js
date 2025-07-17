@@ -44,7 +44,7 @@ function Upload() {
     formData.append("userId", userId);
 
     try {
-      const response = await fetch("https://blue-grass-09f01bd03.1.azurestaticapps.ne/extract", {
+      const response = await fetch("https://flask-backend-hwagfjehhhc0hzby.francecentral-01.azurewebsites.net//extract", {
         method: "POST",
         body: formData,
       });

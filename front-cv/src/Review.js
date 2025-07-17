@@ -30,7 +30,7 @@ function Review() {
   const handleGoSwipe = async () => {
     setIsSubmitting(true);
     try {
-      const response = await fetch("https://blue-grass-09f01bd03.1.azurestaticapps.ne/update-profile", {
+      const response = await fetch("https://flask-backend-hwagfjehhhc0hzby.francecentral-01.azurewebsites.net//update-profile", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

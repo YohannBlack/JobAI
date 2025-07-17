@@ -11,7 +11,7 @@ function Historique() {
     if (!userId) return;
 
     setIsLoading(true);
-    fetch(`https://blue-grass-09f01bd03.1.azurestaticapps.ne/historique_likes?user_id=${userId}`)
+    fetch(`https://flask-backend-hwagfjehhhc0hzby.francecentral-01.azurewebsites.net//historique_likes?user_id=${userId}`)
       .then(res => res.json())
       .then(data => {
         setLikedOffres(data);
