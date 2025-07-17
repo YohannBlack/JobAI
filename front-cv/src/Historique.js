@@ -7,7 +7,7 @@ function Historique() {
   useEffect(() => {
     if (!userId) return;
 
-    fetch(`${process.env.REACT_APP_BACK_URL}/historique_likes?user_id=${userId}`, {
+    fetch(`https://flask-backend-hwagfjehhhc0hzby.francecentral-01.azurewebsites.net/historique_likes?user_id=${userId}`, {
       method: "GET",
     })
       .then((res) => res.json())

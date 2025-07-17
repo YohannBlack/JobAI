@@ -32,7 +32,7 @@ function Upload() {
     formData.append("file", selectedFile);
 
     try {
-      const response = await fetch(`${process.env.REACT_APP_BACK_URL}/extract`, {
+      const response = await fetch(`https://flask-backend-hwagfjehhhc0hzby.francecentral-01.azurewebsites.net/extract`, {
         method: "POST",
         body: formData,
       });

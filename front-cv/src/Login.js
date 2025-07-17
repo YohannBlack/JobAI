@@ -11,9 +11,6 @@ function Login() {
     role: 'user',
   });
 
-  const apiUrl = process.env.REACT_APP_BACK_URL;
-  console.log("API URL:", apiUrl);
-
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -30,7 +27,7 @@ function Login() {
 
     if (isRegistering) {
       if (prenom && nom && email && password) {
-        fetch(`${apiUrl}/register`, {
+        fetch(`https://flask-backend-hwagfjehhhc0hzby.francecentral-01.azurewebsites.net/register`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(formData),
@@ -49,7 +46,7 @@ function Login() {
       }
     } else {
       if (email && password) {
-        fetch(`${apiUrl}/login`, {
+        fetch(`https://flask-backend-hwagfjehhhc0hzby.francecentral-01.azurewebsites.net/login`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ email, password }),

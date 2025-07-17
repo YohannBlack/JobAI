@@ -6,7 +6,7 @@ function Swipe() {
   const userId = localStorage.getItem("user_id");
 
   useEffect(() => {
-    fetch(`${process.env.REACT_APP_BACK_URL}/offres?user_id=${userId}`, {
+    fetch(`https://flask-backend-hwagfjehhhc0hzby.francecentral-01.azurewebsites.net/offres?user_id=${userId}`, {
       method: "GET",
     })
       .then((res) => res.json())
@@ -40,7 +40,7 @@ function Swipe() {
     console.log("Envoi feedback payload:", payload);
 
     try {
-      await fetch(`${process.env.REACT_APP_BACK_URL}/feedback`, {
+      await fetch(`https://flask-backend-hwagfjehhhc0hzby.francecentral-01.azurewebsites.net/feedback`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),

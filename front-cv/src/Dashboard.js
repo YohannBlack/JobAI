@@ -16,7 +16,7 @@ export default function Dashboard() {
         return;
       }
 
-      const response = await fetch(`${process.env.REACT_APP_BACK_URL}/cv/${userId}`, {
+      const response = await fetch(`https://flask-backend-hwagfjehhhc0hzby.francecentral-01.azurewebsites.net/cv/${userId}`, {
         method: "GET",
       });
       const data = await response.json();
