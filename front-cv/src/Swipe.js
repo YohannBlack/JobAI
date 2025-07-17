@@ -7,20 +7,24 @@ function Swipe() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isAnimating, setIsAnimating] = useState(false);
   const [swipeDirection, setSwipeDirection] = useState(null);
+  const [isLoading, setIsLoading] = useState(true); // Nouvel état pour le chargement
   const cardRef = useRef(null);
   const userId = localStorage.getItem("user_id");
 
   // Chargement des offres
   useEffect(() => {
+    setIsLoading(true); // Activer l'état de chargement
     fetch(`https://flask-backend-hwagfjehhhc0hzby.francecentral-01.azurewebsites.net/offres?user_id=${userId}`, {
       method: "GET",
     })
       .then((res) => res.json())
       .then((data) => {
         setOffres(data);
+        setIsLoading(false); // Désactiver l'état de chargement une fois les données reçues
       })
       .catch((error) => {
         console.error("Erreur lors de la récupération des offres :", error);
+        setIsLoading(false); // Désactiver l'état de chargement en cas d'erreur
       });
   }, [userId]);
 
@@ -185,18 +189,60 @@ function Swipe() {
       color: '#fff',
       padding: '20px',
     },
+    loadingState: {
+      textAlign: 'center',
+      color: '#fff',
+      padding: '20px',
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      justifyContent: 'center',
+      height: '100%',
+    },
+    spinner: {
+      border: '4px solid rgba(255, 255, 255, 0.3)',
+      borderRadius: '50%',
+      borderTop: '4px solid #e63946',
+      width: '40px',
+      height: '40px',
+      animation: 'spin 1s linear infinite',
+      marginBottom: '20px',
+    },
     icon: {
       fontSize: '24px',
     },
   };
 
-  if (currentIndex >= offres.length) {
+  // Ajout de l'animation du spinner
+  const spinAnimation = `
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+  `;
+
+  if (currentIndex >= offres.length && !isLoading) {
     return (
       <div style={styles.container}>
         <Navbar />
         <div style={styles.emptyState}>
           <h2>Vous avez vu toutes les offres ! </h2>
           <p>Revenez plus tard pour de nouvelles opportunités</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Afficher l'état de chargement
+  if (isLoading) {
+    return (
+      <div style={styles.container}>
+        <style>{spinAnimation}</style>
+        <Navbar />
+        <div style={styles.loadingState}>
+          <div style={styles.spinner}></div>
+          <h2>Chargement des offres...</h2>
+          <p>Veuillez patienter pendant que nous trouvons les meilleures offres pour vous</p>
         </div>
       </div>
     );
