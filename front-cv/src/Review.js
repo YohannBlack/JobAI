@@ -27,7 +27,7 @@ function Review() {
 
 const handleGoSwipe = async () => {
   try {
-    const response = await fetch("https://172.189.111.146/update-profile", {
+    const response = await fetch(`${process.env.REACT_APP_BACK_URL}/update-profile`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

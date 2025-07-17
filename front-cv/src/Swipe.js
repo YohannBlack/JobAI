@@ -6,7 +6,7 @@ function Swipe() {
   const userId = localStorage.getItem("user_id");
 
   useEffect(() => {
-    fetch(`https://172.189.111.146/offres?user_id=${userId}`, {
+    fetch(`${process.env.REACT_APP_BACK_URL}/offres?user_id=${userId}`, {
       method: "GET",
     })
       .then((res) => res.json())
@@ -40,7 +40,7 @@ function Swipe() {
     console.log("Envoi feedback payload:", payload);
 
     try {
-      await fetch("https://172.189.111.146/feedback", {
+      await fetch(`${process.env.REACT_APP_BACK_URL}/feedback`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),

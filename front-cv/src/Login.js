@@ -28,7 +28,7 @@ function Login() {
    if (isRegistering) {
   if (prenom && nom && email && password) {
 
-    fetch("https://172.189.111.146/register", {
+    fetch(`${process.env.REACT_APP_BACK_URL}/register`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(formData),
@@ -48,7 +48,7 @@ function Login() {
 } 
 else {
     if (email && password) {
-  fetch("https://172.189.111.146/login", {
+  fetch(`${process.env.REACT_APP_BACK_URL}/login`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ email, password }),
