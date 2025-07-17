@@ -11,6 +11,9 @@ function Login() {
     role: 'user',
   });
 
+  const apiUrl = process.env.REACT_APP_BACK_URL;
+  console.log("API URL:", apiUrl);
+
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -25,53 +28,49 @@ function Login() {
     e.preventDefault();
     const { prenom, nom, email, password } = formData;
 
-   if (isRegistering) {
-  if (prenom && nom && email && password) {
-
-    fetch(`${process.env.REACT_APP_BACK_URL}/register`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(formData),
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.message) {
-          alert(data.message);
-          navigate("/upload");
-        } else {
-          alert(data.error);
-        }
-      });
-  } else {
-    alert('Merci de remplir tous les champs pour créer un compte.');
-  }
-} 
-else {
-    if (email && password) {
-  fetch(`${process.env.REACT_APP_BACK_URL}/login`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ email, password }),
-  })
-    .then((res) => res.json())
-    .then((data) => {
-      console.log("Réponse login :", data);
-      if (data.user && data.user.id) {
-        localStorage.setItem("user_id", data.user.id);
-        localStorage.setItem("user", JSON.stringify(data.user));
-        alert(data.message);
-        navigate("/dashboard");
+    if (isRegistering) {
+      if (prenom && nom && email && password) {
+        fetch(`${apiUrl}/register`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(formData),
+        })
+          .then((res) => res.json())
+          .then((data) => {
+            if (data.message) {
+              alert(data.message);
+              navigate("/upload");
+            } else {
+              alert(data.error);
+            }
+          });
       } else {
-        alert(data.error);
+        alert("Merci de remplir tous les champs pour créer un compte.");
       }
-    });
-} else {
-  alert('Merci de remplir tous les champs pour vous connecter.');
-}
-
-  }
-
-};
+    } else {
+      if (email && password) {
+        fetch(`${apiUrl}/login`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email, password }),
+        })
+          .then((res) => res.json())
+          .then((data) => {
+            console.log("Réponse login :", data);
+            if (data.user && data.user.id) {
+              localStorage.setItem("user_id", data.user.id);
+              localStorage.setItem("user", JSON.stringify(data.user));
+              alert(data.message);
+              navigate("/dashboard");
+            } else {
+              alert(data.error);
+            }
+          });
+      } else {
+        alert("Merci de remplir tous les champs pour vous connecter.");
+      }
+    }
+  };
 
   return (
     <div style={styles.container}>
