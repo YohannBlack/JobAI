@@ -7,6 +7,7 @@ function Upload() {
   const [cvData, setCvData] = useState(null);
   const [user, setUser] = useState({ prenom: '', nom: '', email: '' });
   const [error, setError] = useState('');
+  const [isLoading, setIsLoading] = useState(false); // Nouvel état pour le chargement
   const userId = localStorage.getItem("user_id");
   const navigate = useNavigate();
   const location = useLocation();
@@ -17,7 +18,6 @@ function Upload() {
       const userData = JSON.parse(savedUser);
       setUser(userData);
       
-      // Rediriger les nouveaux utilisateurs depuis l'inscription
       if (location.state?.fromRegister) {
         setError('Veuillez uploader votre CV pour compléter votre profil');
       }
@@ -39,6 +39,9 @@ function Upload() {
       return;
     }
 
+    setIsLoading(true); // Activer l'état de chargement
+    setError('');
+
     const formData = new FormData();
     formData.append("file", selectedFile);
     formData.append("userId", userId);
@@ -55,11 +58,11 @@ function Upload() {
 
       const data = await response.json();
       
-      // Vérifier que l'email du CV correspond à l'email de l'utilisateur
       if (data.entities) {
         const emailEntity = data.entities.find(e => e.label.toLowerCase() === 'email');
         if (emailEntity && emailEntity.text !== user.email) {
           setError("L'email du CV ne correspond pas à votre email de connexion");
+          setIsLoading(false);
           return;
         }
       }
@@ -69,6 +72,8 @@ function Upload() {
     } catch (error) {
       console.error("Erreur :", error);
       setError("Une erreur est survenue lors de l'upload");
+    } finally {
+      setIsLoading(false); // Désactiver l'état de chargement dans tous les cas
     }
   };
 
@@ -149,6 +154,11 @@ function Upload() {
         backgroundColor: '#333',
         transform: 'translateY(-2px)',
       },
+      ':disabled': {
+        backgroundColor: '#ccc',
+        cursor: 'not-allowed',
+        transform: 'none',
+      },
     },
     error: {
       color: '#e63946',
@@ -166,10 +176,37 @@ function Upload() {
       margin: '5px 0',
       color: '#333',
     },
+    loadingContainer: {
+      margin: '30px 0',
+      textAlign: 'center',
+    },
+    spinner: {
+      border: '4px solid rgba(31, 28, 44, 0.1)',
+      borderTop: '4px solid #1f1c2c',
+      borderRadius: '50%',
+      width: '40px',
+      height: '40px',
+      animation: 'spin 1s linear infinite',
+      margin: '0 auto',
+    },
+    loadingText: {
+      marginTop: '15px',
+      color: '#1f1c2c',
+      fontWeight: '500',
+    },
   };
+
+  // Animation CSS pour le spinner
+  const spinAnimation = `
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+  `;
 
   return (
     <div style={styles.container}>
+      <style>{spinAnimation}</style>
       <Navbar />
       
       <div style={styles.content}>
@@ -186,31 +223,40 @@ function Upload() {
 
           {error && <div style={styles.error}>{error}</div>}
 
-          <div style={styles.fileInputContainer}>
-            <input
-              type="file"
-              id="fileInput"
-              accept=".pdf"
-              onChange={handleFileChange}
-              style={styles.fileInput}
-            />
-            <label htmlFor="fileInput" style={styles.fileInputLabel}>
-              Sélectionner un fichier PDF
-            </label>
-            {selectedFile && (
-              <div style={styles.fileName}>
-                Fichier sélectionné : {selectedFile.name}
+          {isLoading ? (
+            <div style={styles.loadingContainer}>
+              <div style={styles.spinner}></div>
+              <p style={styles.loadingText}>Analyse de votre CV en cours...</p>
+            </div>
+          ) : (
+            <>
+              <div style={styles.fileInputContainer}>
+                <input
+                  type="file"
+                  id="fileInput"
+                  accept=".pdf"
+                  onChange={handleFileChange}
+                  style={styles.fileInput}
+                />
+                <label htmlFor="fileInput" style={styles.fileInputLabel}>
+                  Sélectionner un fichier PDF
+                </label>
+                {selectedFile && (
+                  <div style={styles.fileName}>
+                    Fichier sélectionné : {selectedFile.name}
+                  </div>
+                )}
               </div>
-            )}
-          </div>
 
-          <button 
-            onClick={handleUpload} 
-            style={styles.button}
-            disabled={!selectedFile}
-          >
-            Analyser mon CV
-          </button>
+              <button 
+                onClick={handleUpload} 
+                style={styles.button}
+                disabled={!selectedFile || isLoading}
+              >
+                Analyser mon CV
+              </button>
+            </>
+          )}
         </div>
       </div>
     </div>
