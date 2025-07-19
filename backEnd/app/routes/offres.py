@@ -69,14 +69,17 @@ def get_offres():
         feedback_query = "SELECT user_id, offre_id, feedback FROM feedback"
         feedback_df = pd.read_sql(feedback_query, conn)
 
-        # Charger les offres
+        # Charger les offres NON vues
         offres_query = """
             SELECT id, intitule, description, dateCreation, typeContrat,
                    lieuTravail_libelle, origineOffre_urlOrigine,
                    lieuTravail_latitude, lieuTravail_longitude
             FROM francetravail
-            WHERE lieuTravail_latitude IS NOT NULL AND lieuTravail_longitude IS NOT NULL
+            WHERE lieuTravail_latitude IS NOT NULL 
+              AND lieuTravail_longitude IS NOT NULL
+              AND id NOT IN (SELECT offre_id FROM feedback WHERE user_id = ?)
         """
+        
         offres_df = pd.read_sql(offres_query, conn)
         conn.close()
 

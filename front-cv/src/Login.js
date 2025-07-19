@@ -27,7 +27,7 @@ const handleSubmit = (e) => {
 
   if (isRegistering) {
     if (prenom && nom && email && password) {
-      fetch("https://flask-backend-hwagfjehhhc0hzby.francecentral-01.azurewebsites.net/register", {
+      fetch("https://flask-backend-final-a2ega5c7fgcpdfah.francecentral-01.azurewebsites.net/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
@@ -50,7 +50,7 @@ const handleSubmit = (e) => {
       }
     } else {
       if (email && password) {
-        fetch("https://flask-backend-hwagfjehhhc0hzby.francecentral-01.azurewebsites.net/login", {
+        fetch("https://flask-backend-final-a2ega5c7fgcpdfah.francecentral-01.azurewebsites.net/login", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ email, password }),

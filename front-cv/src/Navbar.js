@@ -22,82 +22,6 @@ function Navbar() {
     { path: '/cv', label: 'Mon CV', icon: '👁️' },
   ];
 
-  // Styles pour le logo
-  const logoStyles = {
-    logoContainer: {
-      display: 'flex',
-      alignItems: 'center',
-      gap: '10px',
-      cursor: 'pointer',
-    },
-    logoIcon: {
-      position: 'relative',
-      width: '40px',
-      height: '40px',
-    },
-    square: {
-      position: 'absolute',
-      width: '30px',
-      height: '30px',
-      border: '3px solid',
-      borderRadius: '5px',
-      transform: 'rotate(45deg)',
-    },
-    squareBlue: {
-      borderColor: '#2563eb',
-      top: '3px',
-      left: '3px',
-      zIndex: 1,
-    },
-    squareRed: {
-      borderColor: '#e63946',
-      top: '8px',
-      left: '8px',
-      zIndex: 2,
-    },
-    arrow: {
-      position: 'absolute',
-      top: '50%',
-      left: '50%',
-      transform: 'translate(-50%, -50%)',
-      zIndex: 3,
-      width: 0,
-      height: 0,
-      borderLeft: '8px solid #2563eb',
-      borderTop: '6px solid transparent',
-      borderBottom: '6px solid transparent',
-    },
-    arrowBefore: {
-      content: '""',
-      position: 'absolute',
-      top: '-3px',
-      left: '-14px',
-      width: '12px',
-      height: '3px',
-      backgroundColor: '#2563eb',
-      borderRadius: '2px',
-    },
-    logoText: {
-      display: 'flex',
-      flexDirection: 'column',
-      gap: '2px',
-    },
-    mainText: {
-      fontSize: '20px',
-      fontWeight: 'bold',
-      color: '#e63946',
-      letterSpacing: '1px',
-      margin: 0,
-    },
-    subText: {
-      fontSize: '10px',
-      color: '#2563eb',
-      fontWeight: '600',
-      letterSpacing: '0.5px',
-      margin: 0,
-    },
-  };
-
   const styles = {
     navbar: {
       backgroundColor: '#1f1c2c',
@@ -121,6 +45,10 @@ function Navbar() {
       display: 'flex',
       alignItems: 'center',
       gap: '20px',
+    },
+    logo: {
+      height: '40px',
+      cursor: 'pointer',
     },
     desktopMenu: {
       display: 'flex',
@@ -272,23 +200,13 @@ function Navbar() {
       <nav style={styles.navbar}>
         <div style={styles.navContent}>
           <div style={styles.logoSection}>
-            {/* Logo personnalisé */}
-            <div 
-              style={logoStyles.logoContainer}
+            {/* Logo image */}
+            <img 
+              src="/logo.png" 
+              alt="JOBAI Logo" 
+              style={styles.logo}
               onClick={() => navigate('/')}
-            >
-              <div style={logoStyles.logoIcon}>
-                <div style={{ ...logoStyles.square, ...logoStyles.squareBlue }}></div>
-                <div style={{ ...logoStyles.square, ...logoStyles.squareRed }}></div>
-                <div style={logoStyles.arrow}>
-                  <div style={logoStyles.arrowBefore}></div>
-                </div>
-              </div>
-              <div style={logoStyles.logoText}>
-                <h1 style={logoStyles.mainText}>JOBAI</h1>
-                <p style={logoStyles.subText}>SWIPE UR JOB</p>
-              </div>
-            </div>
+            />
             
             {/* Dropdown Menu */}
             <div style={styles.dropdown}>

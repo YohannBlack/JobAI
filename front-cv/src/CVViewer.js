@@ -16,7 +16,7 @@ function CVViewer() {
           return;
         }
 
-        const response = await fetch(`https://flask-backend-hwagfjehhhc0hzby.francecentral-01.azurewebsites.net/cv/${userId}`);
+        const response = await fetch(`https://flask-backend-final-a2ega5c7fgcpdfah.francecentral-01.azurewebsites.net/cv/${userId}`);
         const data = await response.json();
 
         if (response.ok && data.url) {

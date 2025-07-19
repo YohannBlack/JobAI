@@ -14,7 +14,7 @@ function Swipe() {
   // Chargement des offres
   useEffect(() => {
     setIsLoading(true); // Activer l'état de chargement
-    fetch(`https://flask-backend-hwagfjehhhc0hzby.francecentral-01.azurewebsites.net/offres?user_id=${userId}`, {
+    fetch(`https://flask-backend-final-a2ega5c7fgcpdfah.francecentral-01.azurewebsites.net/offres?user_id=${userId}`, {
       method: "GET",
     })
       .then((res) => res.json())
@@ -57,7 +57,7 @@ function Swipe() {
     if (!offre?.id) return;
 
     try {
-      await fetch(`https://flask-backend-hwagfjehhhc0hzby.francecentral-01.azurewebsites.net/feedback`, {
+      await fetch(`https://flask-backend-final-a2ega5c7fgcpdfah.francecentral-01.azurewebsites.net/feedback`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
