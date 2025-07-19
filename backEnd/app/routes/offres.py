@@ -76,11 +76,11 @@ def get_offres():
                    lieuTravail_latitude, lieuTravail_longitude
             FROM francetravail
             WHERE lieuTravail_latitude IS NOT NULL 
-              AND lieuTravail_longitude IS NOT NULLs
+              AND lieuTravail_longitude IS NOT NULL
               AND id NOT IN (SELECT offre_id FROM feedback WHERE user_id = ?)
         """
 
-        offres_df = pd.read_sql(offres_query, conn)
+        offres_df = pd.read_sql(offres_query, conn , params=(user_id,))
         conn.close()
 
         if offres_df.empty:
