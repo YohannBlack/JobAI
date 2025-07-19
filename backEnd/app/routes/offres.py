@@ -76,7 +76,7 @@ def get_offres():
                    lieuTravail_latitude, lieuTravail_longitude
             FROM francetravail
             WHERE lieuTravail_latitude IS NOT NULL 
-              AND lieuTravail_longitude IS NOT NULLs
+              AND lieuTravail_longitude IS NOT NULL
               AND id NOT IN (SELECT offre_id FROM feedback WHERE user_id = ?)
         """
 
